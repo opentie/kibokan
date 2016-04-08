@@ -7,13 +7,12 @@ const fixturesYaml = fs.readFileSync(path.join(__dirname, './fixtures.yml'));
 const definitions = [];
 yaml.safeLoadAll(fixturesYaml, (doc) => definitions.push(doc));
 
-const { Namespace } = require('../');
+const { Namespace, RootSchemaBase, SubSchemaBase } = require('../');
 
-describe('Namespave', () => {
-  it('should construct namespace including Schema, RootSchema, SubSchemata', () => {
+describe('Namespace', () => {
+  it('should construct namespace including RootSchema, SubSchemata', () => {
     const ns = new Namespace();
-    assert(ns.Schema     !== undefined);
-    assert(ns.SubSchema  !== undefined);
-    assert(ns.RootSchema !== undefined);
+    assert(ns.SubSchema.prototype  instanceof SubSchemaBase);
+    assert(ns.RootSchema.prototype instanceof RootSchemaBase);
   });
 });
