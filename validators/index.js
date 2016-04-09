@@ -19,7 +19,7 @@ class BaseValidator {
     }
     assert(this.constructor.parameterSchema instanceof AbstractSchema);
 
-    this.option = this.constructor.parameterSchema.normalize(parameter);
+    this.parameter = this.constructor.parameterSchema.normalize(parameter);
   }
 
   validate(input) {
@@ -33,7 +33,7 @@ class MaxlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (super.validate(input) && input.length <= this.option);
+    return (super.validate(input) && input.length <= this.parameter);
   }
 }
 
@@ -43,11 +43,11 @@ class MinlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (super.validate(input) && input.length >= this.option);
+    return (super.validate(input) && input.length >= this.parameter);
   }
 }
 
-class NumericValidator extends BaseValidator{
+class NumericValidator extends BaseValidator {
   static get parameterSchema() {
     return new NullSchema();
   }
@@ -65,7 +65,7 @@ class MaxvalueValidator extends NumericValidator {
 
   validate(input) {
     return (super.validate(input) &&
-            Number(input) <= this.option);
+            Number(input) <= this.parameter);
   }
 }
 
@@ -76,7 +76,7 @@ class MinvalueValidator extends NumericValidator {
 
   validate(input) {
     return (super.validate(input) &&
-            Number(input) >= this.option);
+            Number(input) >= this.parameter);
   }
 }
 
