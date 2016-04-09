@@ -1,9 +1,6 @@
 'use strict';
 
-let assert = require('assert');
-if (process.env.NODE_ENV === 'test') {
-  assert = require('power-assert'); // eslint-disable-line global-require
-}
+const assert = require('assert');
 
 const {
   AbstractSchema,
