@@ -6,16 +6,10 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const {
-  AbstractSchema,
-  NoopSchema,
-  ClassSchema,
   ObjectSchema,
   ArraySchema,
   BooleanSchema,
-  NumberSchema,
   StringSchema,
-  NullSchema,
-  UndefinedSchema,
 } = require('./lowlevel');
 
 const FieldTypesMap = require('./field_types_map');

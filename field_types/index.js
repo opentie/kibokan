@@ -1,14 +1,9 @@
+'use strict';
+
 const {
-  AbstractSchema,
-  NoopSchema,
-  ClassSchema,
   ObjectSchema,
   ArraySchema,
-  BooleanSchema,
-  NumberSchema,
   StringSchema,
-  NullSchema,
-  UndefinedSchema,
 } = require('../lowlevel');
 
 const {

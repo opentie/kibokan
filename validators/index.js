@@ -6,17 +6,9 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const {
-  Validity,
   AbstractSchema,
-  NoopSchema,
-  ClassSchema,
-  ObjectSchema,
-  ArraySchema,
-  BooleanSchema,
   NumberSchema,
-  StringSchema,
   NullSchema,
-  UndefinedSchema,
 } = require('../lowlevel');
 
 class BaseValidator {

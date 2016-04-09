@@ -103,9 +103,10 @@ rules:
   no-lonely-if: error
   no-loop-func: error
   no-magic-numbers:
-    - error
+    - warn
     - ignore:
         - 0
+        - 1
   no-mixed-requires: error
   no-multi-spaces: error
   no-multi-str: error
