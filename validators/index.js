@@ -21,6 +21,10 @@ class BaseValidator {
 
     this.option = this.constructor.parameterSchema.normalize(parameter);
   }
+
+  validate(input) {
+    return typeof input === 'string';
+  }
 }
 
 class MaxlengthValidator extends BaseValidator {
@@ -29,7 +33,7 @@ class MaxlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (typeof input === 'string' && input.length <= this.option);
+    return (super.validate(input) && input.length <= this.option);
   }
 }
 
@@ -39,41 +43,48 @@ class MinlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (typeof input === 'string' && input.length >= this.option);
+    return (super.validate(input) && input.length >= this.option);
   }
 }
 
-class MaxvalueValidator extends BaseValidator {
+class NumericValidator extends BaseValidator{
+  static get parameterSchema() {
+    return new NullSchema();
+  }
+
+  validate(input) {
+    return (super.validate(input) &&
+            !Number.isNaN(Number(input)));
+  }
+}
+
+class MaxvalueValidator extends NumericValidator {
   static get parameterSchema() {
     return new NumberSchema();
   }
 
   validate(input) {
-    return (typeof input === 'string' &&
-            !Number.isNaN(Number(input)) &&
+    return (super.validate(input) &&
             Number(input) <= this.option);
   }
 }
 
-class MinvalueValidator extends BaseValidator {
+class MinvalueValidator extends NumericValidator {
   static get parameterSchema() {
     return new NumberSchema();
   }
 
   validate(input) {
-    return (typeof input === 'string' &&
-            !Number.isNaN(Number(input)) &&
+    return (super.validate(input) &&
             Number(input) >= this.option);
   }
-}
-
-class NumberValidator extends BaseValidator {
 }
 
 module.exports = {
   BaseValidator,
   MaxlengthValidator,
   MinlengthValidator,
+  NumericValidator,
   MaxvalueValidator,
   MinvalueValidator,
 };
