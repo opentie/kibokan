@@ -48,7 +48,10 @@ rules:
     - 2
   init-declarations: error
   jsx-quotes: error
-  key-spacing: error
+  key-spacing:
+    - error
+    - afterColon: true
+      mode: minimum
   keyword-spacing: error
   linebreak-style:
     - error
@@ -119,7 +122,7 @@ rules:
   no-param-reassign: error
   no-path-concat: error
   no-plusplus: error
-  no-process-env: error
+  no-process-env: 'off'
   no-process-exit: error
   no-proto: error
   no-restricted-globals: error

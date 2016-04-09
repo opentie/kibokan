@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('util');
+
 class Validity {
   constructor(value, errors = [], children = new Map()) {
     this.value = value;
@@ -21,8 +23,11 @@ class Validity {
     }
 
     function toLines (validity) {
+      const errors = (validity.errors.join(', ') || 'no errors');
+      const inspection = util.inspect(validity.value, { depth: 0 });
+
       return [
-        validity.errors.join(', ') || 'no errors'
+        `${errors} (${inspection})`
       ].concat([...validity.children].map(([key, child]) => {
         const [head, ...tail] = toLines(child);
 
@@ -37,7 +42,7 @@ class Validity {
 
   force() {
     if (!this.isValid) {
-      throw new Error('Validation failed\n' + this.toString());
+      throw new Error(`Validation failed\n${this.toString()}`);
     }
 
     return true;
@@ -54,7 +59,8 @@ class AbstractSchema {
       throw new TypeError('Illigal constructor');
     }
 
-    this.option = this.constructor.optionSchema.normalize(option);
+    this.rawOption = option;
+    this.option = this.constructor.optionSchema.normalize(this.rawOption);
   }
 
   validate(value) {
@@ -62,13 +68,18 @@ class AbstractSchema {
   }
 
   normalize(value) {
-    //console.log(this.validate.toString());
     const validity = this.validate(value);
-    if (!validity.isValid) {
-      throw new TypeError('Invalid value');
-    }
+    validity.force();
 
     return value;
+  }
+
+  merge(other) {
+    if (!(other instanceof this.constructor)) {
+      throw new TypeError('Invalid argument');
+    }
+
+    return other;
   }
 }
 
@@ -200,7 +211,6 @@ class ObjectSchemaBase extends AbstractSchema {
       const rule = this.option.properties[key];
 
       if (Object.hasOwnProperty.call(value, key)) {
-        //console.log(value[key]);
         children.set(key, rule.schema.validate(value[key]));
       } else if (rule.required) {
         errors.push(`no property "${key}"`);
@@ -247,6 +257,46 @@ class ObjectSchemaBase extends AbstractSchema {
     }
 
     return Object.assign({}, value, normalizedValue);
+  }
+
+  mergePropertyRules(ruleA, ruleB) {
+    return Object.merge(ruleA, ruleB);
+  }
+
+  mergePropertiesOptions(propertiesA, propertiesB) {
+    const newPropertiesOption = {};
+    const keys = new Set(
+      Object.keys(propertiesA).concat(Object.keys(propertiesB)));
+    for (let key of keys) {
+      const isInA = Object.hasOwnProperty.call(propertiesA, key);
+      const isInB = Object.hasOwnProperty.call(propertiesB, key);
+      if (isInA && isInB) {
+        newPropertiesOption[key] =
+          this.mergePropertyRules(propertiesA[key], propertiesB[key]);
+      } else if (isInA) {
+        newPropertiesOption[key] = propertiesA[key];
+      } else if (isInB) {
+        newPropertiesOption[key] = propertiesB[key];
+      }
+    }
+
+    return newPropertiesOption;
+  }
+
+  merge(other) {
+    if (!(other instanceof this.constructor)) {
+      throw new TypeError('Invalid argument');
+    }
+
+    const newPropertiesOption = this.mergePropertiesOptions(
+      this.option.properties,
+      other.option.properties
+    );
+    const newOption = Object.assign(this.rawOption, other.rawOption, {
+      properties: newPropertiesOption
+    });
+
+    return new this.constructor(newOption);
   }
 }
 

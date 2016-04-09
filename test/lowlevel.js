@@ -59,7 +59,11 @@ describe('ObjectSchema', () => {
           },
           foo: false,
         }).toString() ===
-          'no errors\n  hey: no errors\n    yo: no errors\n  foo: no errors'
+          [
+            'no errors ({ hey: [Object], foo: false })',
+            '  hey: no errors ({ yo: true })',
+            '    yo: no errors (true)\n  foo: no errors (false)'
+          ].join('\n')
       );
     });
   });
