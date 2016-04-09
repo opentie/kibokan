@@ -37,7 +37,7 @@ class MaxlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (typeof input === 'string' && input <= this.option);
+    return (typeof input === 'string' && input.length <= this.option);
   }
 }
 
@@ -47,7 +47,7 @@ class MinlengthValidator extends BaseValidator {
   }
 
   validate(input) {
-    return (typeof input === 'string' && input >= this.option);
+    return (typeof input === 'string' && input.length >= this.option);
   }
 }
 
