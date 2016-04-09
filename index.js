@@ -63,7 +63,7 @@ class FieldSchema {
   }
 }
 
-class SchemaBase {
+class BaseSchema {
   static get optionSchema() {
     return new ObjectSchema({
       extraProperties: false,
@@ -100,7 +100,7 @@ class SchemaBase {
   }
 }
 
-class RootSchema extends SchemaBase {
+class RootSchema extends BaseSchema {
   static get optionSchema() {
     return super.optionSchema.merge(
       new ObjectSchema({
@@ -114,7 +114,7 @@ class RootSchema extends SchemaBase {
   }
 }
 
-class SubSchema extends SchemaBase {
+class SubSchema extends BaseSchema {
 
 }
 
@@ -157,7 +157,7 @@ class Context {
 
 module.exports = {
   Context,
-  SchemaBase,
+  BaseSchema,
   RootSchema,
   SubSchema,
 };
