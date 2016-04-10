@@ -23,7 +23,7 @@ const {
   ListSanitizer,
 } = require('../sanitizers');
 
-const FieldSchema = require('../field_schema');
+const Field = require('../field');
 
 function isCompatibleClass (expected, actual) {
   return (expected === actual ||
@@ -174,7 +174,7 @@ class OptionItem {
 
   constructInsertionFields(insertionFieldOptionList) {
     this.insertionFields = insertionFieldOptionList.map((fieldOption) => {
-      return new FieldSchema(fieldOption, this.context);
+      return new Field(fieldOption, this.context);
     });
   }
 

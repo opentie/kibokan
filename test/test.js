@@ -53,7 +53,7 @@ describe('SubSchema', () => {
     it('should retrieve all possible fields', () => {
       assert.deepStrictEqual(
         schema.retrieveAllPossibleFields().
-          map((fieldSchema) => fieldSchema.name),
+          map((field) => field.name),
         [
           '希望実施エリア',
           '雙峰祭前夜祭への参加希望',

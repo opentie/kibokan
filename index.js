@@ -9,7 +9,7 @@ const {
   StringSchema,
 } = require('./lowlevel');
 
-const FieldSchema = require('./field_schema');
+const Field = require('./field');
 
 class BaseSchema {
   static get optionSchema() {
@@ -30,39 +30,39 @@ class BaseSchema {
     this.option = this.constructor.optionSchema.normalize(option);
 
     this.name = this.option.name;
-    this.fieldSchemata = new Map();
+    this.fields = new Map();
 
     this.context = context;
 
-    this.constructFieldSchemata(this.option.fields);
+    this.constructFields(this.option.fields);
   }
 
-  addFieldSchema(fieldSchema) {
-    this.fieldSchemata.set(fieldSchema.name, fieldSchema);
+  addField(field) {
+    this.fields.set(field.name, field);
   }
 
-  constructFieldSchemata(fieldsOption) {
-    for (let key of Object.keys(fieldsOption)) {
-      const fieldOption = fieldsOption[key];
+  constructFields(fieldOptions) {
+    for (let key of Object.keys(fieldOptions)) {
+      const fieldOption = fieldOptions[key];
 
-      const fieldSchema = new FieldSchema(fieldOption, this.context);
-      this.addFieldSchema(fieldSchema);
+      const field = new Field(fieldOption, this.context);
+      this.addField(field);
     }
   }
 
   retrieveAllPossibleFields() {
-    const fieldSchemata =
-            [...this.fieldSchemata.values()].map((fieldSchema) => {
-              return [fieldSchema].concat(
-                fieldSchema.retrievePossibleInsertionFields());
+    const fields =
+            [...this.fields.values()].map((field) => {
+              return [field].concat(
+                field.retrievePossibleInsertionFields());
             });
 
-    return Array.prototype.concat.apply([], fieldSchemata);
+    return Array.prototype.concat.apply([], fields);
   }
 
   retrievePossibleAttachmentSchemata() {
-    const schemata = [...this.fieldSchemata.values()].map((fieldSchema) => {
-      return fieldSchema.retrievePossibleAttachmentSchemata();
+    const schemata = [...this.fields.values()].map((field) => {
+      return field.retrievePossibleAttachmentSchemata();
     });
 
     return Array.prototype.concat.apply([], schemata);
