@@ -8,6 +8,11 @@ const {
   NullSchema,
 } = require('../lowlevel');
 
+const {
+  StringSanitizer,
+  ListSanitizer,
+} = require('../sanitizers');
+
 class BaseValidator {
   constructor(parameter = null) {
     // this is an abstract class
@@ -25,12 +30,8 @@ class BaseValidator {
 }
 
 class StringValidator extends BaseValidator {
-  static get parameterSchema() {
-    return new NullSchema();
-  }
-
-  validate(input) {
-    return typeof input === 'string';
+  static get sanitizer() {
+    return StringSanitizer;
   }
 }
 
@@ -88,12 +89,8 @@ class MinvalueValidator extends NumericValidator {
 }
 
 class ListValidator extends BaseValidator {
-  static get parameterSchema() {
-    return new NullSchema();
-  }
-
-  validate(input) {
-    return Array.isArray(input);
+  static get sanitizer() {
+    return ListSanitizer;
   }
 }
 

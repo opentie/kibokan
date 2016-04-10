@@ -9,18 +9,11 @@ const {
   MinlengthValidator,
   MaxvalueValidator,
   MinvalueValidator,
-  ListValidator,
   MaxitemsValidator,
   MinitemsValidator,
 } = require('../validators');
 
 describe('MaxlengthValidator', () => {
-  it('should return false to not a string', () => {
-    const validator = new MaxlengthValidator(10);
-
-    assert(validator.validate(100) === false);
-  });
-
   context('when parameter = 10', () => {
     const validator = new MaxlengthValidator(10);
 
@@ -35,12 +28,6 @@ describe('MaxlengthValidator', () => {
 });
 
 describe('MinlengthValidator', () => {
-  it('should return false to not a string', () => {
-    const validator = new MinlengthValidator(10);
-
-    assert(validator.validate(100) === false);
-  });
-
   context('when parameter = 11', () => {
     const validator = new MinlengthValidator(11);
 
@@ -57,10 +44,6 @@ describe('MinlengthValidator', () => {
 describe('MaxvalueValidator', () => {
   context('always', () => {
     const validator = new MaxvalueValidator(100);
-
-    it('should return false to not a string', () => {
-      assert(validator.validate(10) === false);
-    });
 
     it('should return false to a non-numeric string', () => {
       assert(validator.validate('non numeric string') === false);
@@ -88,10 +71,6 @@ describe('MinvalueValidator', () => {
   context('always', () => {
     const validator = new MinvalueValidator(10);
 
-    it('should return false to not a string', () => {
-      assert(validator.validate(100) === false);
-    });
-
     it('should return false to a non-numeric string', () => {
       assert(validator.validate('non numeric string') === false);
     });
@@ -107,18 +86,6 @@ describe('MinvalueValidator', () => {
     it('should return true to "3"', () => {
       assert(validator.validate('3') === true);
     });
-  });
-});
-
-describe('ListValidator', () => {
-  const validator = new ListValidator();
-
-  it('should return false to a non-array', () => {
-    assert(validator.validate('hoge') === false);
-  });
-
-  it('should return true to an array', () => {
-    assert(validator.validate([]) === true);
   });
 });
 

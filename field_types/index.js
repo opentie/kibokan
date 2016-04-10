@@ -15,6 +15,16 @@ const {
 
 const FieldTypesMap = require('../field_types_map');
 
+const {
+  StringSanitizer,
+  ListSanitizer,
+} = require('../sanitizers');
+
+function isCompatibleClass (expected, actual) {
+  return (expected === actual ||
+          actual.prototype instanceof expected);
+}
+
 class BaseFieldType {
   static get optionSchema() {
     return new ObjectSchema({
@@ -58,12 +68,16 @@ class BaseFieldType {
     }
     this.option = this.constructor.optionSchema.normalize(option);
 
-    const validators = this.constructor.validators;
+    const { validators, sanitizer } = this.constructor;
     this.validators = this.option.validations.map(({ type, parameter }) => {
       if (!Object.hasOwnProperty.call(validators, type)) {
         throw new TypeError(`No such validator: ${type}`);
       }
+
       const Validator = validators[type];
+      if (!isCompatibleClass(Validator.sanitizer, sanitizer)) {
+        throw new TypeError(`Not compatible validator: ${type}`);
+      }
 
       return new Validator(parameter);
     });
@@ -77,6 +91,10 @@ class StringBaseFieldType extends BaseFieldType {
       minlength: MinlengthValidator,
     });
   }
+
+  static get sanitizer() {
+    return StringSanitizer;
+  }
 }
 
 class TextFieldType extends StringBaseFieldType {
@@ -84,12 +102,6 @@ class TextFieldType extends StringBaseFieldType {
 FieldTypesMap.set('text', TextFieldType);
 
 class ParagraphFieldType extends StringBaseFieldType {
-  static get validators() {
-    return Object.assign(super.validators, {
-      maxlength: MaxlengthValidator,
-      minlength: MinlengthValidator,
-    });
-  }
 }
 FieldTypesMap.set('paragraph', ParagraphFieldType);
 
