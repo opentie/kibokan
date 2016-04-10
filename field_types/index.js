@@ -26,7 +26,7 @@ function isCompatibleClass (expected, actual) {
 }
 
 class BaseFieldType {
-  static get optionSchema() {
+  static get parameterSchema() {
     return new ObjectSchema({
       extraProperties: false,
       properties: {
@@ -66,10 +66,10 @@ class BaseFieldType {
     if (this.constructor === BaseFieldType) {
       throw new TypeError('Illigal constructor');
     }
-    this.option = this.constructor.optionSchema.normalize(option);
+    this.parameter = this.constructor.parameterSchema.normalize(option);
 
     const { validators, sanitizer } = this.constructor;
-    this.validators = this.option.validations.map(({ type, parameter }) => {
+    this.validators = this.parameter.validations.map(({ type, parameter }) => {
       if (!Object.hasOwnProperty.call(validators, type)) {
         throw new TypeError(`No such validator: ${type}`);
       }
@@ -105,9 +105,9 @@ class ParagraphFieldType extends StringBaseFieldType {
 }
 FieldTypesMap.set('paragraph', ParagraphFieldType);
 
-class SelectableBaseFieldType {
-  static get optionSchema() {
-    return super.optionSchema.merge(
+class SelectableBaseFieldType extends BaseFieldType {
+  static get parameterSchema() {
+    return super.parameterSchema.merge(
       new ObjectSchema({
         extraProperties: false,
         properties: {
