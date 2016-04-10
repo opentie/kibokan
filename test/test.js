@@ -16,17 +16,48 @@ const { Context } = require('../');
 
 describe('RootSchema', () => {
   it('should register self with context', () => {
-    const ns = new Context();
-    const rootSchema = ns.createRootSchema(definitions[0]);
-    assert(ns.rootSchema === rootSchema);
+    const context = new Context();
+    const rootSchema = context.createRootSchema(definitions[0]);
+    assert(context.rootSchema === rootSchema);
+  });
+
+  context('when all schemata is loaded', () => {
+    const context = new Context();
+    const rootSchema = context.createRootSchema(definitions[0]);
+    for (let def of definitions.slice(1)) {
+      context.createSubSchema(def);
+    }
+
+    it('should retrieve all attachments', () => {
+      assert.deepStrictEqual(
+        rootSchema.retrievePossibleAttachmentSchemata().
+          map((schema) => schema.name),
+        [
+          '屋内企画基本情報',
+          '屋外企画基本情報',
+        ]);
+    });
   });
 });
 
 describe('SubSchema', () => {
-  it('should register self with context', () => {
-    const ns = new Context();
-    const schema = ns.createSubSchema(definitions[1]);
-    assert(ns.rootSchema === null);
-    assert(ns.schemata.get(schema.name) === schema);
+  context('"屋外企画基本情報"', () => {
+    const context = new Context();
+    const schema = context.createSubSchema(definitions[2]);
+
+    it('should register self with context', () => {
+      assert(context.rootSchema === null);
+      assert(context.schemata.get(schema.name) === schema);
+    });
+
+    it('should retrieve all possible fields', () => {
+      assert.deepStrictEqual(
+        schema.retrieveAllPossibleFields().
+          map((fieldSchema) => fieldSchema.name),
+        [
+          '希望実施エリア',
+          '雙峰祭前夜祭への参加希望',
+        ]);
+    });
   });
 });

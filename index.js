@@ -26,25 +26,46 @@ class BaseSchema {
     });
   }
 
-  constructor(option) {
+  constructor(option, context) {
     this.option = this.constructor.optionSchema.normalize(option);
 
     this.name = this.option.name;
-    this.fieldSchemata = this.constructFieldSchemata(this.option.fields);
+    this.fieldSchemata = new Map();
 
-    this.context = null;
+    this.context = context;
+
+    this.constructFieldSchemata(this.option.fields);
+  }
+
+  addFieldSchema(fieldSchema) {
+    this.fieldSchemata.set(fieldSchema.name, fieldSchema);
   }
 
   constructFieldSchemata(fieldsOption) {
-    const fieldSchemata = new Map();
     for (let key of Object.keys(fieldsOption)) {
       const fieldOption = fieldsOption[key];
 
-      const fieldSchema = new FieldSchema(fieldOption);
-      fieldSchemata.set(fieldSchemata.name, fieldSchema);
+      const fieldSchema = new FieldSchema(fieldOption, this.context);
+      this.addFieldSchema(fieldSchema);
     }
+  }
 
-    return fieldSchemata;
+  retrieveAllPossibleFields() {
+    const fieldSchemata =
+            [...this.fieldSchemata.values()].map((fieldSchema) => {
+              return [fieldSchema].concat(
+                fieldSchema.retrievePossibleInsertionFields());
+            });
+
+    return Array.prototype.concat.apply([], fieldSchemata);
+  }
+
+  retrievePossibleAttachmentSchemata() {
+    const schemata = [...this.fieldSchemata.values()].map((fieldSchema) => {
+      return fieldSchema.retrievePossibleAttachmentSchemata();
+    });
+
+    return Array.prototype.concat.apply([], schemata);
   }
 }
 
@@ -73,17 +94,16 @@ class Context {
   }
 
   createSubSchema(option) {
-    return this.registerSubSchema(new SubSchema(option));
+    return this.registerSubSchema(new SubSchema(option, this));
   }
 
   createRootSchema(option) {
-    return this.registerRootSchema(new RootSchema(option));
+    return this.registerRootSchema(new RootSchema(option, this));
   }
 
   registerSubSchema(subSchema) {
     assert(subSchema instanceof SubSchema);
 
-    subSchema.context = this;
     this.schemata.set(subSchema.name, subSchema);
 
     return subSchema;
@@ -91,15 +111,19 @@ class Context {
 
   registerRootSchema(rootSchema) {
     assert(rootSchema instanceof RootSchema);
+    assert(this.rootSchema === null,
+           'root schema is already registered');
 
-    if (this.rootSchema !== null) {
-      throw new Error('root schema is already registered');
-    }
-
-    rootSchema.context = this;
     this.rootSchema = rootSchema;
 
     return rootSchema;
+  }
+
+  resolve(schemaName) {
+    assert(this.schemata.has(schemaName),
+           `no such schema: ${schemaName}`);
+
+    return this.schemata.get(schemaName);
   }
 }
 

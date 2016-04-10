@@ -159,6 +159,22 @@ class UndefinedSchema extends AbstractSchema {
   }
 }
 
+class NullableSchema extends AbstractSchema {
+  validate(value) {
+    return (value === null)
+      ? new Validity(value)
+      : this.option.schema.validate(value);
+  }
+
+  normalize(value_) {
+    const value = super.normalize(value_);
+
+    return (value === null)
+      ? null
+      : this.option.schema.normalize(value);
+  }
+}
+
 class ArraySchema extends AbstractSchema {
   static get optionSchema() {
     return new ObjectSchema({
@@ -363,6 +379,7 @@ module.exports = {
   NumberSchema,
   StringSchema,
   NullSchema,
+  NullableSchema,
   UndefinedSchema,
   Nothing,
 };

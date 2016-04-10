@@ -40,11 +40,11 @@ fields:
     parameters:
       options:
         - label: 屋内(会館以外)
-          attaches:
+          attachmentNames:
             - "屋内企画基本情報"
         - label: 会館屋内
         - label: 屋外
-          attaches:
+          attachmentNames:
             - "屋外企画基本情報"
         - label: ステージ
 #        includes:
@@ -90,17 +90,12 @@ fields:
         - label: "エリア未確定"
         - label: "第一エリア"
         - label: "第二・第三エリア"
-          inserts:
-            - "前夜祭"
+          insertionFields:
+              - name: "雙峰祭前夜祭への参加希望"
+                type: radio
+                required: true
+                parameters:
+                  options:
+                    - label: "希望する"
+                    - label: "希望しない"
         - label: "大芸エリア"
-
----
-name: "前夜祭"
-fields:
-  - name: "雙峰祭前夜祭への参加希望"
-    type: radio
-    required: true
-    parameters:
-      options:
-        - label: "希望する"
-        - label: "希望しない"

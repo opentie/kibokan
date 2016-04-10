@@ -40,17 +40,32 @@ class FieldSchema {
     });
   }
 
-  constructor(option) {
+  constructor(option, context) {
     this.option = this.constructor.optionSchema.normalize(option);
 
     this.name = this.option.name;
     this.description = this.option.description;
     this.required = this.option.required;
-    if (!FieldTypesMap.has(this.option.type)) {
-      throw new TypeError(`No such field type: ${this.option.type}`);
+
+    this.context = context;
+
+    this.constructType(this.option.type, this.option.parameters);
+  }
+
+  constructType(type, parameters) {
+    if (!FieldTypesMap.has(type)) {
+      throw new TypeError(`No such field type: ${type}`);
     }
-    const FieldType = FieldTypesMap.get(this.option.type);
-    this.type = new FieldType(this.option.parameters);
+    const FieldType = FieldTypesMap.get(type);
+    this.type = new FieldType(parameters, this.context);
+  }
+
+  retrievePossibleInsertionFields() {
+    return this.type.retrievePossibleInsertionFields();
+  }
+
+  retrievePossibleAttachmentSchemata() {
+    return this.type.retrievePossibleAttachmentSchemata();
   }
 }
 
