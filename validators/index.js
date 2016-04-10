@@ -9,7 +9,7 @@ const {
 } = require('../lowlevel');
 
 class BaseValidator {
-  constructor(parameter) {
+  constructor(parameter = null) {
     // this is an abstract class
     if (this.constructor === BaseValidator) {
       throw new TypeError('Illigal constructor');
@@ -20,11 +20,21 @@ class BaseValidator {
   }
 
   validate(input) {
+    return true;
+  }
+}
+
+class StringValidator extends BaseValidator {
+  static get parameterSchema() {
+    return new NullSchema();
+  }
+
+  validate(input) {
     return typeof input === 'string';
   }
 }
 
-class MaxlengthValidator extends BaseValidator {
+class MaxlengthValidator extends StringValidator {
   static get parameterSchema() {
     return new NumberSchema();
   }
@@ -34,7 +44,7 @@ class MaxlengthValidator extends BaseValidator {
   }
 }
 
-class MinlengthValidator extends BaseValidator {
+class MinlengthValidator extends StringValidator {
   static get parameterSchema() {
     return new NumberSchema();
   }
@@ -44,7 +54,7 @@ class MinlengthValidator extends BaseValidator {
   }
 }
 
-class NumericValidator extends BaseValidator {
+class NumericValidator extends StringValidator {
   static get parameterSchema() {
     return new NullSchema();
   }
@@ -77,11 +87,45 @@ class MinvalueValidator extends NumericValidator {
   }
 }
 
+class ListValidator extends BaseValidator {
+  static get parameterSchema() {
+    return new NullSchema();
+  }
+
+  validate(input) {
+    return Array.isArray(input);
+  }
+}
+
+class MaxitemsValidator extends ListValidator {
+  static get parameterSchema() {
+    return new NumberSchema();
+  }
+
+  validate(input) {
+    return input.length <= this.parameter;
+  }
+}
+
+class MinitemsValidator extends ListValidator {
+  static get parameterSchema() {
+    return new NumberSchema();
+  }
+
+  validate(input) {
+    return input.length >= this.parameter;
+  }
+}
+
 module.exports = {
   BaseValidator,
+  StringValidator,
   MaxlengthValidator,
   MinlengthValidator,
   NumericValidator,
   MaxvalueValidator,
   MinvalueValidator,
+  ListValidator,
+  MaxitemsValidator,
+  MinitemsValidator,
 };

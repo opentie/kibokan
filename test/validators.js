@@ -9,6 +9,9 @@ const {
   MinlengthValidator,
   MaxvalueValidator,
   MinvalueValidator,
+  ListValidator,
+  MaxitemsValidator,
+  MinitemsValidator,
 } = require('../validators');
 
 describe('MaxlengthValidator', () => {
@@ -104,5 +107,41 @@ describe('MinvalueValidator', () => {
     it('should return true to "3"', () => {
       assert(validator.validate('3') === true);
     });
+  });
+});
+
+describe('ListValidator', () => {
+  const validator = new ListValidator();
+
+  it('should return false to a non-array', () => {
+    assert(validator.validate('hoge') === false);
+  });
+
+  it('should return true to an array', () => {
+    assert(validator.validate([]) === true);
+  });
+});
+
+describe('MaxitemsValidator', () => {
+  const validator = new MaxitemsValidator(2);
+
+  it('should return false to [1, 2, 3]', () => {
+    assert(validator.validate([1, 2, 3]) === false);
+  });
+
+  it('should return true to [1, 2]', () => {
+    assert(validator.validate([1, 2]) === true);
+  });
+});
+
+describe('MinitemsValidator', () => {
+  const validator = new MinitemsValidator(2);
+
+  it('should return false to [1]', () => {
+    assert(validator.validate([1]) === false);
+  });
+
+  it('should return true to [1, 2]', () => {
+    assert(validator.validate([1, 2]) === true);
   });
 });
