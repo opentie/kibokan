@@ -36,57 +36,42 @@ class StringValidator extends BaseValidator {
 }
 
 class MaxlengthValidator extends StringValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return (super.validate(input) && input.length <= this.parameter);
   }
 }
+MaxlengthValidator.parameterSchema = new NumberSchema();
 
 class MinlengthValidator extends StringValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return (super.validate(input) && input.length >= this.parameter);
   }
 }
+MinlengthValidator.parameterSchema = new NumberSchema();
 
 class NumericValidator extends StringValidator {
-  static get parameterSchema() {
-    return new NullSchema();
-  }
-
   validate(input) {
     return (super.validate(input) &&
             !Number.isNaN(Number(input)));
   }
 }
+NumericValidator.parameterSchema = new NullSchema();
 
 class MaxvalueValidator extends NumericValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return (super.validate(input) &&
             Number(input) <= this.parameter);
   }
 }
+MaxvalueValidator.parameterSchema = new NumberSchema();
 
 class MinvalueValidator extends NumericValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return (super.validate(input) &&
             Number(input) >= this.parameter);
   }
 }
+MinvalueValidator.parameterSchema = new NumberSchema();
 
 class ListValidator extends BaseValidator {
   static get sanitizer() {
@@ -95,24 +80,18 @@ class ListValidator extends BaseValidator {
 }
 
 class MaxitemsValidator extends ListValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return input.length <= this.parameter;
   }
 }
+MaxitemsValidator.parameterSchema = new NumberSchema();
 
 class MinitemsValidator extends ListValidator {
-  static get parameterSchema() {
-    return new NumberSchema();
-  }
-
   validate(input) {
     return input.length >= this.parameter;
   }
 }
+MinitemsValidator.parameterSchema = new NumberSchema();
 
 module.exports = {
   BaseValidator,

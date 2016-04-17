@@ -11,8 +11,10 @@ const {
 
 const FieldTypesMap = require('./field_types_map');
 
+const staticize = require('./staticize').bind(null, 'serializationFormat');
+
 class FieldSchema {
-  static get optionSchema() {
+  static get serializationFormat() {
     return new ObjectSchema({
       extraProperties: false,
       properties: {
@@ -40,33 +42,38 @@ class FieldSchema {
     });
   }
 
-  constructor(option, context) {
-    this.option = this.constructor.optionSchema.normalize(option);
+  constructor(name, description, required, type) {
+    this.name = name;
+    this.description = description;
+    this.required = required;
+    this.type = type;
 
-    this.name = this.option.name;
-    this.description = this.option.description;
-    this.required = this.option.required;
-
-    this.context = context;
-
-    this.constructType(this.option.type, this.option.parameters);
+    Object.freeze(this);
   }
 
-  constructType(type, parameters) {
-    if (!FieldTypesMap.has(type)) {
-      throw new TypeError(`No such field type: ${type}`);
-    }
-    const FieldType = FieldTypesMap.get(type);
-    this.type = new FieldType(parameters, this.context);
+  static deserialize(serializedField) {
+    const normalizedField = this.serializationFormat.normalize(serializedField);
+
+    const { name, description, required, parameters } = normalizedField;
+
+    const typeName = normalizedField.type;
+    const FieldType = FieldTypesMap.get(typeName);
+    assert(typeof FieldType !== 'undefined', `no such FieldType ${typeName}`);
+    const type = FieldType.deserialize(parameters);
+
+    const instance = new this(name, description, required, type);
+
+    return instance;
   }
 
-  retrievePossibleInsertionFields() {
-    return this.type.retrievePossibleInsertionFields();
+  retrievePossibleInsertionFields(category) {
+    return this.type.retrievePossibleInsertionFields(category);
   }
 
-  retrievePossibleAttachmentSchemata() {
-    return this.type.retrievePossibleAttachmentSchemata();
+  retrievePossibleAttachmentSchemata(category) {
+    return this.type.retrievePossibleAttachmentSchemata(category);
   }
 }
+staticize(FieldSchema);
 
 module.exports = FieldSchema;

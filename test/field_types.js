@@ -20,11 +20,9 @@ const {
 describe('TextFieldType', () => {
   describe('#validate', () => {
     context('when maxlength = 10', () => {
-      const type = new TextFieldType({
-        validations: [
-          { type: 'maxlength', parameter: 10 }
-        ]
-      });
+      const type = new TextFieldType([
+        new MaxlengthValidator(10),
+      ]);
 
       it('should return 1 error to "hello world"', () => {
         const errors = type.validate('hello world');
@@ -34,11 +32,9 @@ describe('TextFieldType', () => {
     });
 
     context('when maxlength = 20', () => {
-      const type = new TextFieldType({
-        validations: [
-          { type: 'maxlength', parameter: 20 }
-        ]
-      });
+      const type = new TextFieldType([
+        new MaxlengthValidator(20),
+      ]);
 
       it('should return no errors to "hello world"', () => {
         const errors = type.validate('hello world');
@@ -47,12 +43,10 @@ describe('TextFieldType', () => {
     });
 
     context('when maxlength = 20, minlength = 10', () => {
-      const type = new TextFieldType({
-        validations: [
-          { type: 'maxlength', parameter: 20 },
-          { type: 'minlength', parameter: 10 },
-        ]
-      });
+      const type = new TextFieldType([
+        new MaxlengthValidator(20),
+        new MinlengthValidator(10),
+      ]);
 
       it('should return no errors to "hello world"', () => {
         const errors = type.validate('hello world');

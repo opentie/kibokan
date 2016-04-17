@@ -8,12 +8,50 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 
-const fixturesYaml = fs.readFileSync(path.join(__dirname, './fixtures.yml'));
-const definitions = [];
-yaml.safeLoadAll(fixturesYaml, (doc) => definitions.push(doc));
+const fixturesYaml = fs.readFileSync(path.join(__dirname, './fixtures/context.yml'));
+const categoryData = yaml.safeLoad(fixturesYaml);
 
-const { Context } = require('../');
+const Category = require('../category');
 
+describe('Category', () => {
+  describe('.deserialize', () => {
+    it('should deserialize ./fixtures/context.yml', () => {
+      const category = Category.deserialize(categoryData);
+      assert(category instanceof Category);
+    });
+  });
+
+  context('when ./fixtures/context.yml is loaded', () => {
+    const category = Category.deserialize(categoryData);
+
+    it('should have a root schema', () => {
+      assert(category.rootSchemaName === '企画基本情報');
+      assert(category.rootSchema.name === '企画基本情報');
+    });
+
+    it('should have schemata', () => {
+      assert(category.schemata.get('企画基本情報') !== null);
+      assert(category.schemata.get('屋内企画基本情報') !== null);
+      assert(category.schemata.get('屋外企画基本情報') !== null);
+    });
+
+    describe('RootSchema', () => {
+      const rootSchema = category.rootSchema;
+
+      it('should retrieve all attachments', () => {
+        assert.deepStrictEqual(
+          rootSchema.retrievePossibleAttachmentSchemata(category).
+            map((schema) => schema.name),
+          [
+            '屋内企画基本情報',
+            '屋外企画基本情報',
+          ]);
+      });
+    });
+  });
+});
+
+/*
 describe('RootSchema', () => {
   it('should register self with context', () => {
     const context = new Context();
@@ -61,3 +99,4 @@ describe('SubSchema', () => {
     });
   });
 });
+*/

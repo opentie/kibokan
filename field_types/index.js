@@ -2,6 +2,8 @@
 
 const assert = require('assert');
 
+const staticize = require('../staticize').bind(null, 'serializationFormat');
+
 const {
   ObjectSchema,
   ArraySchema,
@@ -31,7 +33,11 @@ function isCompatibleClass (expected, actual) {
 }
 
 class BaseFieldType {
-  static get parameterSchema() {
+  static get typeName() {
+    throw new Error('not implemented');
+  }
+
+  static get serializationFormat() {
     return new ObjectSchema({
       extraProperties: false,
       properties: {
@@ -62,22 +68,25 @@ class BaseFieldType {
     return {};
   }
 
-  constructor(option, context) {
-    //if (context === undefined) { throw new Error(); }
+  constructor(validations) {
     // this is an abstract class
     assert(this.constructor !== BaseFieldType, 'Illigal constructor');
 
-    this.parameter = this.constructor.parameterSchema.normalize(option);
-    this.validtors = [];
-
-    this.context = context;
-
-    this.constructValidators(this.parameter.validations);
+    this.validations = validations;
   }
 
-  constructValidators(validations) {
-    const { validators, sanitizer } = this.constructor;
-    this.validators = validations.map(({ type, parameter }) => {
+  static deserialize() {
+    throw new Error('Not implemented');
+  }
+
+  serialize() {
+    throw new Error('Not implemented');
+  }
+
+  static deserializeValidations(validations) {
+    const { validators, sanitizer } = this;
+
+    return validations.map(({ type, parameter }) => {
       assert(Object.hasOwnProperty.call(validators, type),
              `No such validator: ${type}`);
 
@@ -90,7 +99,7 @@ class BaseFieldType {
   }
 
   validate(input) {
-    return this.validators.filter((validator) => !validator.validate(input));
+    return this.validations.filter((validator) => !validator.validate(input));
   }
 
   retrievePossibleInsertionFields() {
@@ -101,6 +110,7 @@ class BaseFieldType {
     return [];
   }
 }
+staticize(BaseFieldType);
 
 class StringBaseFieldType extends BaseFieldType {
   static get validators() {
@@ -110,21 +120,48 @@ class StringBaseFieldType extends BaseFieldType {
     });
   }
 
+  constructor(validations) {
+    super(validations);
+
+    Object.freeze(this);
+  }
+
   static get sanitizer() {
     return StringSanitizer;
   }
+
+  static deserialize(serializedTypeParameters) {
+    const normalizedTypeParameters =
+            this.serializationFormat.normalize(serializedTypeParameters);
+
+    const validations =
+            this.deserializeValidations(normalizedTypeParameters.validations);
+
+    const instance = new this(validations);
+
+    return instance;
+  }
 }
+staticize(StringBaseFieldType);
 
 class TextFieldType extends StringBaseFieldType {
+  static get typeName() {
+    return 'text';
+  }
 }
-FieldTypesMap.set('text', TextFieldType);
+staticize(TextFieldType);
+FieldTypesMap.register(TextFieldType);
 
 class ParagraphFieldType extends StringBaseFieldType {
+  static get typeName() {
+    return 'paragraph';
+  }
 }
-FieldTypesMap.set('paragraph', ParagraphFieldType);
+staticize(ParagraphFieldType);
+FieldTypesMap.register(ParagraphFieldType);
 
 class OptionItem {
-  static get parametersSchema() {
+  static get serializationFormat() {
     return new ObjectSchema({
       extraProperties: false,
       properties: {
@@ -155,42 +192,53 @@ class OptionItem {
     });
   }
 
-  constructor(parameters, context) {
-    this.parameters = this.constructor.parametersSchema.normalize(parameters);
+  constructor(label, insertionFields, attachmentNames, deadline) {
+    this.label = label;
+    this.insertionFields = insertionFields;
+    this.attachmentNames = attachmentNames;
+    this.deadline = deadline;
+    this.isDeadlineSet = (this.deadline !== null);
 
-    this.label = this.parameters.label;
-    this.insertionFields = [];
-    this.attachmentNames = this.parameters.attachmentNames;
-    this.isDeadlineSet = (this.parameters.deadline !== null);
-    this.deadline = null;
-    if (this.isDeadlineSet) {
-      this.deadline = new Date(this.parameters.deadline);
-    }
-
-    this.context = context;
-
-    this.constructInsertionFields(this.parameters.insertionFields);
+    Object.freeze(this);
   }
 
-  constructInsertionFields(insertionFieldOptionList) {
-    this.insertionFields = insertionFieldOptionList.map((fieldOption) => {
-      return new Field(fieldOption, this.context);
-    });
+  static deserialize(serializedOption) {
+    const normalizedOption =
+            this.serializationFormat.normalize(serializedOption);
+
+    const { label, attachmentNames } = normalizedOption;
+
+    const serializedInsertionFields = normalizedOption.insertionFields;
+    const insertionFields = serializedInsertionFields.
+            map(Field.deserialize.bind(Field));
+
+    const deadline = (normalizedOption.deadline !== null)
+            ? new Date(normalizedOption.deadline)
+            : null;
+
+    const instance = new this(label, insertionFields, attachmentNames, deadline);
+
+    return instance;
   }
 
-  retrievePossibleAttachmentSchemata() {
-    const resolve = this.context.resolve.bind(this.context);
+  serialize() {
+    // TODO:
+  }
+
+  retrievePossibleAttachmentSchemata(category) {
+    const resolve = category.resolve.bind(category);
     const attachments = this.attachmentNames.map(resolve).map((schema) => {
-      return [schema].concat(schema.retrievePossibleAttachmentSchemata());
+      return [schema].concat(schema.retrievePossibleAttachmentSchemata(category));
     });
 
     return Array.prototype.concat.apply([], attachments);
   }
 }
+staticize(OptionItem);
 
 class SelectableBaseFieldType extends BaseFieldType {
-  static get parameterSchema() {
-    return super.parameterSchema.merge(
+  static get serializationFormat() {
+    return super.serializationFormat.merge(
       new ObjectSchema({
         extraProperties: false,
         properties: {
@@ -203,19 +251,27 @@ class SelectableBaseFieldType extends BaseFieldType {
     );
   }
 
-  constructor(...args) {
-    super(...args);
-    this.options = [];
+  constructor(validations, options) {
+    super(validations);
 
-    this.constructOptions(this.parameter.options);
+    this.options = options;
+
+    Object.freeze(this);
   }
 
-  constructOptions(optionParametersList) {
-    this.options = optionParametersList.map((optionParameters) => {
-      const option = new OptionItem(optionParameters, this.context);
+  static deserialize(serializedTypeParameters) {
+    const normalizedTypeParameters =
+            this.serializationFormat.normalize(serializedTypeParameters);
 
-      return option;
-    });
+    const validations =
+            this.deserializeValidations(normalizedTypeParameters.validations);
+
+    const options = normalizedTypeParameters.options.
+            map(OptionItem.deserialize.bind(OptionItem));
+
+    const instance = new this(validations, options);
+
+    return instance;
   }
 
   retrievePossibleInsertionFields() {
@@ -226,19 +282,24 @@ class SelectableBaseFieldType extends BaseFieldType {
     return Array.prototype.concat.apply([], fields);
   }
 
-  retrievePossibleAttachmentSchemata() {
-    const resolve = this.context.resolve.bind(this.context);
+  retrievePossibleAttachmentSchemata(category) {
+    const resolve = category.resolve.bind(category);
     const attachments = this.options.map((option) => {
-      return option.retrievePossibleAttachmentSchemata();
+      return option.retrievePossibleAttachmentSchemata(category);
     });
 
     return Array.prototype.concat.apply([], attachments);
   }
 }
+staticize(SelectableBaseFieldType);
 
 class RadioFieldType extends SelectableBaseFieldType {
+  static get typeName() {
+    return 'radio';
+  }
 }
-FieldTypesMap.set('radio', RadioFieldType);
+staticize(RadioFieldType);
+FieldTypesMap.register(RadioFieldType);
 
 module.exports = {
   BaseFieldType,

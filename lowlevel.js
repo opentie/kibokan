@@ -50,10 +50,6 @@ class Validity {
 }
 
 class AbstractSchema {
-  static get optionSchema() {
-    return new NoopSchema();
-  }
-
   constructor(option = {}) {
     if (this.constructor === AbstractSchema) {
       throw new TypeError('Illigal constructor');
@@ -84,15 +80,6 @@ class AbstractSchema {
 }
 
 class NoopSchema extends AbstractSchema {
-  static get optionSchema() {
-    // HACK: avoid stack overflow
-    return {
-      normalize: function id (value) {
-        return value;
-      },
-      validate: AbstractSchema.prototype.validate
-    };
-  }
 }
 
 class ClassSchemaBase extends AbstractSchema {
@@ -104,19 +91,6 @@ class ClassSchemaBase extends AbstractSchema {
 }
 
 class ClassSchema extends ClassSchemaBase {
-  static get optionSchema() {
-    return new ObjectSchemaBase({
-      extraProperties: false,
-      propertySchema: new NoopSchema(),
-      properties: {
-        class: {
-          required: true,
-          default: Nothing,
-          schema: new ClassSchemaBase({ class: Function })
-        }
-      }
-    });
-  }
 }
 
 class StringSchema extends AbstractSchema {
@@ -176,19 +150,6 @@ class NullableSchema extends AbstractSchema {
 }
 
 class ArraySchema extends AbstractSchema {
-  static get optionSchema() {
-    return new ObjectSchema({
-      properties: {
-        itemSchema: {
-          schema: new ClassSchema({ class: AbstractSchema }),
-          required: false,
-          default: new NoopSchema()
-        }
-      },
-      extraProperties: false
-    });
-  }
-
   validate(value) {
     if (Array.isArray(value)) {
       return new Validity(
@@ -317,56 +278,86 @@ class ObjectSchemaBase extends AbstractSchema {
 }
 
 class ObjectSchema extends ObjectSchemaBase {
-  static get optionSchema() {
-    const PROPERTIES_SCHEMA = new ObjectSchemaBase({
-      extraProperties: true,
-      propertySchema: new ObjectSchemaBase({
-        extraProperties: true,
-        propertySchema: new NoopSchema(),
-        properties: {
-          required: {
-            required: false,
-            schema: new BooleanSchema(),
-            default: true
-          },
-          default: {
-            required: false,
-            schema: new NoopSchema(),
-            default: Nothing
-          },
-          schema: {
-            required: false,
-            schema: new ClassSchema({ class: AbstractSchema }),
-            default: new NoopSchema()
-          }
-        }
-      }),
-      properties: {}
-    });
-
-    return new ObjectSchemaBase({
-      extraProperties: false,
-      propertySchema: new NoopSchema(),
-      properties: {
-        extraProperties: {
-          required: false,
-          default: true,
-          schema: new BooleanSchema(),
-        },
-        propertySchema: {
-          required: false,
-          default: new NoopSchema(),
-          schema: new ClassSchema({ class: AbstractSchema }),
-        },
-        properties: {
-          required: false,
-          default: {},
-          schema: PROPERTIES_SCHEMA,
-        }
-      }
-    });
-  }
 }
+
+// HACK: avoid stack overflow
+NoopSchema.optionSchema ={
+  normalize: function id (value) {
+    return value;
+  },
+  validate: AbstractSchema.prototype.validate
+};
+
+AbstractSchema.optionSchema = new NoopSchema();
+
+ObjectSchema.optionSchema = new ObjectSchemaBase({
+  extraProperties: false,
+  propertySchema: new NoopSchema(),
+  properties: {
+    extraProperties: {
+      required: false,
+      default: true,
+      schema: new BooleanSchema(),
+    },
+    propertySchema: {
+      required: false,
+      default: new NoopSchema(),
+      schema: new ClassSchema({ class: AbstractSchema }),
+    },
+    properties: {
+      required: false,
+      default: {},
+      schema: new ObjectSchemaBase({
+        extraProperties: true,
+        propertySchema: new ObjectSchemaBase({
+          extraProperties: true,
+          propertySchema: new NoopSchema(),
+          properties: {
+            required: {
+              required: false,
+              schema: new BooleanSchema(),
+              default: true
+            },
+            default: {
+              required: false,
+              schema: new NoopSchema(),
+              default: Nothing
+            },
+            schema: {
+              required: false,
+              schema: new ClassSchema({ class: AbstractSchema }),
+              default: new NoopSchema()
+            }
+          }
+        }),
+        properties: {}
+      }),
+    }
+  }
+});
+
+ArraySchema.optionSchema = new ObjectSchema({
+  properties: {
+    itemSchema: {
+      schema: new ClassSchema({ class: AbstractSchema }),
+      required: false,
+      default: new NoopSchema()
+    }
+  },
+  extraProperties: false
+});
+
+ClassSchema.optionSchema = new ObjectSchemaBase({
+  extraProperties: false,
+  propertySchema: new NoopSchema(),
+  properties: {
+    class: {
+      required: true,
+      default: Nothing,
+      schema: new ClassSchemaBase({ class: Function })
+    }
+  }
+});
 
 module.exports = {
   Validity,

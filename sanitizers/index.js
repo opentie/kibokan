@@ -49,3 +49,9 @@ class ListSanitizer extends BaseSanitizer {
     return Array.isArray(this.input);
   }
 }
+
+module.exports = {
+  BaseSanitizer,
+  StringSanitizer,
+  ListSanitizer,
+};
