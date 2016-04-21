@@ -19,9 +19,6 @@
   },
   "homepage": "https://github.com/opentie/kibokan#readme",
   "dependencies": {
-    "koa": "^1.2.0",
-    "koa-router": "^5.4.0",
-    "mongodb": "^2.1.16"
   },
   "devDependencies": {
     "eslint": "^2.7.0",
