@@ -3,7 +3,7 @@ rootSchemaName: "企画基本情報"
 schemata:
   - name: "企画基本情報"
     fields:
-      - $type: text
+      - $class: text
         $parameter:
           name: "企画名"
           description: |
@@ -11,33 +11,33 @@ schemata:
           required: true
           parameters:
           validations:
-            - $type: maxlength
+            - $class: maxlength
               $parameter: 20
-      - $type: text
+      - $class: text
         $parameter:
           name: "企画名ふりがな"
           description: |
             企画名のふりがなを入力してください
           required: true
-      - $type: text
+      - $class: text
         $parameter:
           name: "企画団体名"
           description: |
             企画を主催する団体名を入力してください
           required: true
-      - $type: text
+      - $class: text
         $parameter:
           name: "企画団体名ふりがな"
           description: |
             企画団体名のふりがなを入力してください
           required: true
-      - $type: paragraph
+      - $class: paragraph
         $parameter:
           name: "企画概要"
           description: |
             企画の概要を入力してください
           required: true
-      - $type: radio
+      - $class: radio
         $parameter:
           name: "企画実施場所"
           description: |
@@ -57,7 +57,7 @@ schemata:
 
   - name: "屋内企画基本情報"
     fields:
-      - $type: radio
+      - $class: radio
         $parameter:
           name: "希望実施エリア"
           required: true
@@ -66,14 +66,14 @@ schemata:
             - label: "第一エリア"
             - label: "第二・第三エリア"
             - label: "大芸エリア"
-      - $type: radio
+      - $class: radio
         $parameter:
           name: "雙峰祭一日目への参加希望"
           required: true
           options:
             - label: "希望する"
             - label: "希望しない"
-      - $type: radio
+      - $class: radio
         $parameters:
           name: "雙峰祭二日目への参加希望"
           required: true
@@ -83,7 +83,7 @@ schemata:
 
   - name: "屋外企画基本情報"
     fields:
-      - $type: radio
+      - $class: radio
         $parameter:
           name: "希望実施エリア"
           required: true
