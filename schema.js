@@ -11,7 +11,6 @@ class Schema {
     this._fields = new NamedObjectMap();
 
     this.name = name;
-    this.deadline = deadline;
     this.fields = fields;
   }
 
