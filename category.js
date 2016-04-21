@@ -2,88 +2,71 @@
 
 const assert = require('assert');
 
-const {
-  ObjectSchema,
-  ArraySchema,
-  BooleanSchema,
-  StringSchema,
-} = require('./lowlevel');
+const NamedObjectMap = require('./named_object_map');
 
 const Schema = require('./schema');
-const AttachmentSchema = require('./attachment_schema');
+const ReferenceSchema = require('./reference_schema');
+const Fields = require('./fields');
+const Validators = require('./validators');
+const OptionItem = require('./option_item');
 
 class Category {
-  static get serializationFormat() {
-    return new ObjectSchema({
-      extraProperties: false,
-      properties: {
-        name: {
-          required: true,
-          schema: new StringSchema(),
-        },
-        schemata: {
-          required: false,
-          schema: new ArraySchema(),
-          default: []
-        },
-        attachmentSchemata: {
-          required: false,
-          schema: new ArraySchema(),
-          default: []
-        },
-        rootSchemaName: {
-          required: true,
-          schema: new StringSchema(),
-        }
-      }
-    });
-  }
-
-  static deserialize(serializedCategory) {
-    const normalizedCategory =
-            this.serializationFormat.normalize(serializedCategory);
-
-    const { name, rootSchemaName } = normalizedCategory;
-
-    const schemata = normalizedCategory.schemata.
-            map(Schema.deserialize.bind(Schema));
-
-    const attachmentSchemata = normalizedCategory.attachmentSchemata.
-            map(AttachmentSchema.deserialize.bind(AttachmentSchema));
-
-    const instance = new this(
-      name, rootSchemaName, schemata, attachmentSchemata);
-
-    return instance;
-  }
-
-  serialize() {
-    // TODO: implement
-  }
-
-  constructor(name, rootSchemaName, schemata, attachmentSchemata) {
+  constructor(name) {
     this.name = name;
-    this.rootSchemaName = rootSchemaName;
-    this.schemata = new Map();
-    this.attachmentSchemata = new Map();
+    this.rootSchemaName = null;
+    this._schemata = new NamedObjectMap();
+    this._referenceSchemata = new NamedObjectMap();
+  }
 
-    for (let schema of schemata) {
-      this.schemata.set(schema.name, schema);
-    }
-    for (let attachmentSchema of attachmentSchemata) {
-      this.schemata.set(attachmentSchemata.name, attachmentSchema);
-    }
+  set schemata(schemata) {
+    this._schemata.replaceWith(schemata);
+  }
 
-    this.rootSchema = this.schemata.get(this.rootSchemaName);
+  get schemata() {
+    return [...this._schemata.values()];
+  }
 
-    Object.freeze(this);
+  set referenceSchemata(schemata) {
+    this._referenceSchemata.replaceWith(schemata);
+  }
+
+  get referenceSchemata() {
+    return [...this._referenceSchemata.values()];
+  }
+
+  get rootSchema() {
+    return this.resolve(this.rootSchemaName);
   }
 
   resolve(schemaName) {
-    assert(this.schemata.has(schemaName),
+    assert(this._schemata.has(schemaName),
            `no such schema: ${schemaName}`);
 
-    return this.schemata.get(schemaName);
+    return this._schemata.get(schemaName);
+  }
+
+  createSchema(...args) {
+    return new Schema(this, ...args);
+  }
+
+  createReferenceSchema(...args) {
+    return new ReferenceSchema(this, ...args);
+  }
+
+  createField(className, ...args) {
+    const Field = Fields.get(className);
+
+    return new Field(this, ...args);
+  }
+
+  createValidator(className, ...args) {
+    const Validator = Validators.get(className);
+
+    return new Validator(this, ...args);
+  }
+
+  createOptionItem(...args) {
+    return new OptionItem(this, ...args);
   }
 }
 

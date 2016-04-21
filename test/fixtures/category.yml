@@ -10,7 +10,7 @@ schemata:
             企画名を入力してください
           required: true
           parameters:
-          validations:
+          validators:
             - $class: maxlength
               $parameter: 20
       - $class: text
