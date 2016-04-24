@@ -68,6 +68,21 @@ class Category {
   createOptionItem(...args) {
     return new OptionItem(this, ...args);
   }
+
+  serialize() {
+    const {
+      name, rootSchemaName,
+      schemata, referenceSchemata,
+    } = this;
+
+    const serialize = obj => obj.serialize();
+
+    return {
+      name, rootSchemaName,
+      schemata: schemata.map(serialize),
+      referenceSchemata: referenceSchemata.map(serialize),
+    };
+  }
 }
 
 module.exports = Category;

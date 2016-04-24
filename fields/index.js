@@ -39,6 +39,20 @@ class BaseField {
   retrievePossibleAttachmentSchemata() {
     return [];
   }
+
+  serialize() {
+    const { name, description, isRequired, validators } = this;
+
+    return {
+      name, description, isRequired,
+      validators: validators.map(validator => {
+        return {
+          $type: validator.constructor.name,
+          $parameter: validator.serialize(),
+        };
+      }),
+    };
+  }
 }
 
 class StringBaseField extends BaseField {
@@ -77,6 +91,16 @@ class SelectableBaseField extends BaseField {
     });
 
     return Array.prototype.concat.apply([], attachments);
+  }
+
+  serialize() {
+    const { options } = this;
+
+    const serialize = obj => obj.serialize();
+
+    return Object.assign(super.serialize(), {
+      options: options.map(serialize)
+    });
   }
 }
 

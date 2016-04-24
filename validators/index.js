@@ -20,6 +20,10 @@ class BaseValidator {
   validate(input) {
     return true;
   }
+
+  serialize() {
+    return this.parameter;
+  }
 }
 
 class StringValidator extends BaseValidator {

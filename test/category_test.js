@@ -14,7 +14,6 @@ describe('Category', () => {
     let field1, field2, field3;
     const schema1 = category.createSchema({
       name: 'schema1',
-      deadline: null,
       fields: [
         field1 = category.createField('TextField', {
           name: 'field1',
@@ -28,7 +27,7 @@ describe('Category', () => {
           name: 'field2',
           description: null,
           isRequired: true,
-          validations: [],
+          validators: [],
           options: [
             category.createOptionItem({
               label: 'option1',
@@ -37,7 +36,7 @@ describe('Category', () => {
                   name: 'field3',
                   description: null,
                   isRequired: true,
-                  validations: []
+                  validators: []
                 })
               ],
               attachmentNames: ['schema2'],
@@ -50,13 +49,12 @@ describe('Category', () => {
 
     const schema2 = category.createSchema({
       name: 'schema2',
-      deadline: null,
       fields: [
         category.createField('RadioField', {
           name: 'field4',
           description: null,
           isRequired: true,
-          validations: [],
+          validators: [],
           options: [
             category.createOptionItem({
               label: 'option2',
@@ -65,7 +63,7 @@ describe('Category', () => {
                   name: 'field5',
                   description: null,
                   isRequired: true,
-                  validations: []
+                  validators: []
                 })
               ],
               attachmentNames: ['schema3'],
@@ -78,13 +76,12 @@ describe('Category', () => {
 
     const schema3 = category.createSchema({
       name: 'schema3',
-      deadline: null,
       fields: [
         category.createField('RadioField', {
           name: 'field6',
           description: null,
           isRequired: true,
-          validations: [],
+          validators: [],
           options: [
             category.createOptionItem({
               label: 'option3',
@@ -93,7 +90,7 @@ describe('Category', () => {
                   name: 'field7',
                   description: null,
                   isRequired: true,
-                  validations: []
+                  validators: []
                 })
               ],
               attachmentNames: [],
@@ -105,6 +102,7 @@ describe('Category', () => {
     });
 
     category.schemata = [schema1, schema2, schema3];
+    category.rootSchemaName = schema1.name;
 
     assert(category.resolve('schema1') === schema1);
 
@@ -117,6 +115,124 @@ describe('Category', () => {
       schema1.retrievePossibleAttachmentSchemata(),
       [ schema2, schema3 ]
     );
+
+    assert.deepEqual(category.serialize(), {
+      name: 'test',
+      rootSchemaName: 'schema1',
+      schemata: [
+        {
+          name: 'schema1',
+          fields: [
+            {
+              $type: 'TextField',
+              $parameter: {
+                name: 'field1',
+                description: null,
+                isRequired: true,
+                validators: [
+                  {
+                    $type: 'MaxlengthValidator',
+                    $parameter: 10,
+                  }
+                ]
+              }
+            },
+            {
+              $type: 'RadioField',
+              $parameter: {
+                name: 'field2',
+                description: null,
+                isRequired: true,
+                validators: [],
+                options: [
+                  {
+                    label: 'option1',
+                    insertionFields: [
+                      {
+                        $type: 'ParagraphField',
+                        $parameter: {
+                          name: 'field3',
+                          description: null,
+                          isRequired: true,
+                          validators: []
+                        }
+                      }
+                    ],
+                    attachmentNames: ['schema2'],
+                    deadline: null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          name: 'schema2',
+          fields: [
+            {
+              $type: 'RadioField',
+              $parameter: {
+                name: 'field4',
+                description: null,
+                isRequired: true,
+                validators: [],
+                options: [
+                  {
+                    label: 'option2',
+                    insertionFields: [
+                      {
+                        $type: 'ParagraphField',
+                        $parameter: {
+                          name: 'field5',
+                          description: null,
+                          isRequired: true,
+                          validators: []
+                        }
+                      }
+                    ],
+                    attachmentNames: ['schema3'],
+                    deadline: null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          name: 'schema3',
+          fields: [
+            {
+              $type: 'RadioField',
+              $parameter: {
+                name: 'field6',
+                description: null,
+                isRequired: true,
+                validators: [],
+                options: [
+                  {
+                    label: 'option3',
+                    insertionFields: [
+                      {
+                        $type: 'ParagraphField',
+                        $parameter: {
+                          name: 'field7',
+                          description: null,
+                          isRequired: true,
+                          validators: []
+                        }
+                      }
+                    ],
+                    attachmentNames: [],
+                    deadline: null
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      referenceSchemata: [],
+    });
   });
 });
 

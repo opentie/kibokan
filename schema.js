@@ -39,6 +39,20 @@ class Schema {
 
     return Array.prototype.concat.apply([], schemata);
   }
+
+  serialize() {
+    const { name, fields } = this;
+
+    return {
+      name,
+      fields: fields.map(field => {
+        return {
+          $type: field.constructor.name,
+          $parameter: field.serialize(),
+        };
+      })
+    };
+  }
 }
 
 module.exports = Schema;

@@ -17,6 +17,20 @@ class OptionItem {
 
     return Array.prototype.concat.apply([], attachments);
   }
+
+  serialize() {
+    const { label, insertionFields, attachmentNames, deadline } = this;
+
+    return {
+      label, attachmentNames, deadline,
+      insertionFields: insertionFields.map(field => {
+        return {
+          $type: field.constructor.name,
+          $parameter: field.serialize(),
+        };
+      })
+    };
+  }
 }
 
 module.exports = OptionItem;
