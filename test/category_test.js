@@ -118,7 +118,7 @@ describe('Category', () => {
       [ schema2, schema3 ]
     );
 
-    assert.deepEqual(category.serialize(), {
+    const serialized = {
       name: 'test',
       rootSchemaName: 'schema1',
       schemata: [
@@ -236,7 +236,16 @@ describe('Category', () => {
         }
       ],
       referenceSchemata: [],
-    });
+    };
+
+    assert.deepEqual(category.serialize(), serialized);
+
+    const category2 = new Category();
+    category2.deserialize(serialized);
+    assert(category2.name === 'test');
+    assert(category2.rootSchemaName === 'schema1');
+    assert(category2.schemata.length === 3);
+    assert(category2.schemata[0].name === 'schema1');
   });
 });
 

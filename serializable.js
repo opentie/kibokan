@@ -18,7 +18,7 @@ function createInstanceMapper(Class) {
     deserialize: function deserializeInstance(properties) {
       const instance = new Class(this.category); // TODO: kimoi
 
-      return Object.assgin(instance, properties);
+      return instance.deserialize(properties);
     }
   };
 }
@@ -100,6 +100,8 @@ class Serializable {
     for (const key of Object.keys(properties)) {
       this[key] = properties[key].mapper.deserialize.call(this, obj[key]);
     }
+
+    return this;
   }
 
   serialize() {

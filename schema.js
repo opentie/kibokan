@@ -9,6 +9,10 @@ const Fields = require('./fields');
 
 class Schema extends Serializable {
   set fields(fields) {
+    if (fields.length === 2 && fields[0] === undefined) {
+      console.log(fields);
+      throw new Error();
+    }
     this._fields = NamedObjectMap.fromArray(fields);
   }
 
