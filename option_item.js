@@ -1,14 +1,8 @@
-class OptionItem {
-  constructor(category, { label, insertionFields, attachmentNames, deadline }) {
-    this.category = category;
+const Serializable = require('./serializable');
 
-    this.label = label;
-    this.insertionFields = insertionFields;
-    this.attachmentNames = attachmentNames;
-    this.deadline = deadline;
-    this.isDeadlineSet = (this.deadline !== null);
-  }
+const Fields = require('./fields');
 
+class OptionItem extends Serializable {
   retrievePossibleAttachmentSchemata() {
     const resolve = this.category.resolve.bind(this.category);
     const attachments = this.attachmentNames.map(resolve).map((schema) => {
@@ -17,20 +11,10 @@ class OptionItem {
 
     return Array.prototype.concat.apply([], attachments);
   }
-
-  serialize() {
-    const { label, insertionFields, attachmentNames, deadline } = this;
-
-    return {
-      label, attachmentNames, deadline,
-      insertionFields: insertionFields.map(field => {
-        return {
-          $type: field.constructor.name,
-          $parameter: field.serialize(),
-        };
-      })
-    };
-  }
 }
+OptionItem.property('label', '');
+OptionItem.property('insertionFields', [], [Fields]);
+OptionItem.property('attachmentNames', [], [true]);
+OptionItem.property('deadline', '', true);
 
 module.exports = OptionItem;

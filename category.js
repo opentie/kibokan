@@ -2,6 +2,8 @@
 
 const assert = require('assert');
 
+const Serializable = require('./serializable');
+
 const NamedObjectMap = require('./named_object_map');
 
 const Schema = require('./schema');
@@ -9,17 +11,16 @@ const ReferenceSchema = require('./reference_schema');
 const Fields = require('./fields');
 const Validators = require('./validators');
 const OptionItem = require('./option_item');
+// DIRTY HACK: resolve circular reference
+OptionItem.property('insertionFields', [], [Fields]);
 
-class Category {
-  constructor(name) {
-    this.name = name;
-    this.rootSchemaName = null;
-    this._schemata = new NamedObjectMap();
-    this._referenceSchemata = new NamedObjectMap();
+class Category extends Serializable {
+  constructor(initialValues) {
+    super(null, initialValues);
   }
 
   set schemata(schemata) {
-    this._schemata.replaceWith(schemata);
+    this._schemata = NamedObjectMap.fromArray(schemata);
   }
 
   get schemata() {
@@ -27,7 +28,7 @@ class Category {
   }
 
   set referenceSchemata(schemata) {
-    this._referenceSchemata.replaceWith(schemata);
+    this._referenceSchemata = NamedObjectMap.fromArray(schemata);
   }
 
   get referenceSchemata() {
@@ -68,21 +69,10 @@ class Category {
   createOptionItem(...args) {
     return new OptionItem(this, ...args);
   }
-
-  serialize() {
-    const {
-      name, rootSchemaName,
-      schemata, referenceSchemata,
-    } = this;
-
-    const serialize = obj => obj.serialize();
-
-    return {
-      name, rootSchemaName,
-      schemata: schemata.map(serialize),
-      referenceSchemata: referenceSchemata.map(serialize),
-    };
-  }
 }
+Category.property('name', null);
+Category.property('rootSchemaName', null);
+Category.property('schemata', [], [Schema]);
+Category.property('referenceSchemata', [], [ReferenceSchema]);
 
 module.exports = Category;

@@ -15,7 +15,8 @@ const {
 
 describe('MaxlengthValidator', () => {
   context('when parameter = 10', () => {
-    const validator = new MaxlengthValidator(null, 10);
+    const validator = new MaxlengthValidator(null);
+    validator.threshold = 10;
 
     it('should return true to "goodbye"', () => {
       assert(validator.validate('goodbye') === true);
@@ -24,12 +25,19 @@ describe('MaxlengthValidator', () => {
     it('should return false to "hello world"', () => {
       assert(validator.validate('hello world') === false);
     });
+
+    it('should serialize itself', () => {
+      assert.deepEqual(validator.serialize(), {
+        threshold: 10
+      });
+    });
   });
 });
 
 describe('MinlengthValidator', () => {
   context('when parameter = 11', () => {
-    const validator = new MinlengthValidator(null, 11);
+    const validator = new MinlengthValidator(null);
+    validator.threshold = 11;
 
     it('should return false to "goodbye"', () => {
       assert(validator.validate('goodbye') === false);
@@ -43,7 +51,8 @@ describe('MinlengthValidator', () => {
 
 describe('MaxvalueValidator', () => {
   context('always', () => {
-    const validator = new MaxvalueValidator(null, 100);
+    const validator = new MaxvalueValidator(null);
+    validator.threshold = 100;
 
     it('should return false to a non-numeric string', () => {
       assert(validator.validate('non numeric string') === false);
@@ -51,7 +60,8 @@ describe('MaxvalueValidator', () => {
   });
 
   context('when parameter = 3', () => {
-    const validator = new MaxvalueValidator(null, 3);
+    const validator = new MaxvalueValidator(null);
+    validator.threshold = 3;
 
     it('should return false to a non-numeric string', () => {
       assert(validator.validate('non numeric string') === false);
@@ -69,7 +79,8 @@ describe('MaxvalueValidator', () => {
 
 describe('MinvalueValidator', () => {
   context('always', () => {
-    const validator = new MinvalueValidator(null, 10);
+    const validator = new MinvalueValidator(null);
+    validator.threshold = 10;
 
     it('should return false to a non-numeric string', () => {
       assert(validator.validate('non numeric string') === false);
@@ -77,7 +88,8 @@ describe('MinvalueValidator', () => {
   });
 
   context('when parameter = 3', () => {
-    const validator = new MinvalueValidator(null, 3);
+    const validator = new MinvalueValidator(null);
+    validator.threshold = 3;
 
     it('should return false to "2"', () => {
       assert(validator.validate('2') === false);
@@ -90,7 +102,8 @@ describe('MinvalueValidator', () => {
 });
 
 describe('MaxitemsValidator', () => {
-  const validator = new MaxitemsValidator(null, 2);
+  const validator = new MaxitemsValidator(null);
+  validator.threshold = 2;
 
   it('should return false to [1, 2, 3]', () => {
     assert(validator.validate([1, 2, 3]) === false);
@@ -102,7 +115,8 @@ describe('MaxitemsValidator', () => {
 });
 
 describe('MinitemsValidator', () => {
-  const validator = new MinitemsValidator(null, 2);
+  const validator = new MinitemsValidator(null);
+  validator.threshold = 2;
 
   it('should return false to [1]', () => {
     assert(validator.validate([1]) === false);

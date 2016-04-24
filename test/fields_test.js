@@ -20,7 +20,9 @@ describe('TextFieldType', () => {
     context('when maxlength = 10', () => {
       const field = category.createField('TextField', {
         validators: [
-          category.createValidator('MaxlengthValidator', 10)
+          category.createValidator('MaxlengthValidator', {
+            threshold: 10
+          })
         ]
       });
 
@@ -34,7 +36,9 @@ describe('TextFieldType', () => {
     context('when maxlength = 20', () => {
       const field = category.createField('TextField', {
         validators: [
-          category.createValidator('MaxlengthValidator', 20)
+          category.createValidator('MaxlengthValidator', {
+            threshold: 20
+          })
         ]
       });
 
@@ -47,8 +51,12 @@ describe('TextFieldType', () => {
     context('when maxlength = 20, minlength = 10', () => {
       const field = category.createField('TextField', {
         validators: [
-          category.createValidator('MaxlengthValidator', 20),
-          category.createValidator('MinlengthValidator', 10),
+          category.createValidator('MaxlengthValidator', {
+            threshold: 20
+          }),
+          category.createValidator('MinlengthValidator', {
+            threshold: 10
+          }),
         ]
       });
 

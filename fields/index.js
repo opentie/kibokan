@@ -2,8 +2,10 @@
 
 const assert = require('assert');
 
+const Serializable = require('../serializable');
 const NamedObjectMap = require('../named_object_map');
 
+const Validators = require('../validators');
 const OptionItem = require('../option_item');
 
 const {
@@ -18,16 +20,7 @@ function isCompatibleClass (expected, actual) {
           actual.prototype instanceof expected);
 }
 
-class BaseField {
-  constructor(category, { name, description, isRequired, validators }) {
-    this.category = category;
-
-    this.name = name;
-    this.description = description;
-    this.isRequired = isRequired;
-    this.validators = validators;
-  }
-
+class BaseField extends Serializable {
   validate(input) {
     return this.validators.filter((validator) => !validator.validate(input));
   }
@@ -39,21 +32,11 @@ class BaseField {
   retrievePossibleAttachmentSchemata() {
     return [];
   }
-
-  serialize() {
-    const { name, description, isRequired, validators } = this;
-
-    return {
-      name, description, isRequired,
-      validators: validators.map(validator => {
-        return {
-          $type: validator.constructor.name,
-          $parameter: validator.serialize(),
-        };
-      }),
-    };
-  }
 }
+BaseField.property('name', '');
+BaseField.property('description', '');
+BaseField.property('isRequired', false);
+BaseField.property('validators', [], [Validators]);
 
 class StringBaseField extends BaseField {
   static get sanitizer() {
@@ -70,12 +53,6 @@ class ParagraphField extends StringBaseField {
 Fields.add(ParagraphField);
 
 class SelectableBaseField extends BaseField {
-  constructor(category, parameter) {
-    super(category, parameter);
-
-    this.options = parameter.options;
-  }
-
   retrievePossibleInsertionFields() {
     const fields = this.options.map((option) => {
       return option.insertionFields;
@@ -92,17 +69,8 @@ class SelectableBaseField extends BaseField {
 
     return Array.prototype.concat.apply([], attachments);
   }
-
-  serialize() {
-    const { options } = this;
-
-    const serialize = obj => obj.serialize();
-
-    return Object.assign(super.serialize(), {
-      options: options.map(serialize)
-    });
-  }
 }
+SelectableBaseField.property('options', [], [OptionItem]);
 
 class RadioField extends SelectableBaseField {
 }

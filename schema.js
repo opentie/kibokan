@@ -2,20 +2,14 @@
 
 const assert = require('assert');
 
+const Serializable = require('./serializable');
 const NamedObjectMap = require('./named_object_map');
 
-class Schema {
-  constructor(category, { name, fields, deadline }) {
-    this.category = category;
+const Fields = require('./fields');
 
-    this._fields = new NamedObjectMap();
-
-    this.name = name;
-    this.fields = fields;
-  }
-
+class Schema extends Serializable {
   set fields(fields) {
-    this._fields.replaceWith(fields);
+    this._fields = NamedObjectMap.fromArray(fields);
   }
 
   get fields() {
@@ -39,20 +33,8 @@ class Schema {
 
     return Array.prototype.concat.apply([], schemata);
   }
-
-  serialize() {
-    const { name, fields } = this;
-
-    return {
-      name,
-      fields: fields.map(field => {
-        return {
-          $type: field.constructor.name,
-          $parameter: field.serialize(),
-        };
-      })
-    };
-  }
 }
+Schema.property('name', '');
+Schema.property('fields', [], [Fields]);
 
 module.exports = Schema;

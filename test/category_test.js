@@ -9,7 +9,7 @@ const Category = require('../category');
 
 describe('Category', () => {
   it('should construct object graph', () => {
-    const category = new Category('test');
+    const category = new Category({ name: 'test' });
 
     let field1, field2, field3;
     const schema1 = category.createSchema({
@@ -20,7 +20,9 @@ describe('Category', () => {
           description: null,
           isRequired: true,
           validators: [
-            category.createValidator('MaxlengthValidator', 10)
+            category.createValidator('MaxlengthValidator', {
+              threshold: 10
+            })
           ]
         }),
         field2 = category.createField('RadioField', {
@@ -124,22 +126,24 @@ describe('Category', () => {
           name: 'schema1',
           fields: [
             {
-              $type: 'TextField',
-              $parameter: {
+              $class: 'TextField',
+              $properties: {
                 name: 'field1',
                 description: null,
                 isRequired: true,
                 validators: [
                   {
-                    $type: 'MaxlengthValidator',
-                    $parameter: 10,
+                    $class: 'MaxlengthValidator',
+                    $properties: {
+                      threshold: 10
+                    },
                   }
                 ]
               }
             },
             {
-              $type: 'RadioField',
-              $parameter: {
+              $class: 'RadioField',
+              $properties: {
                 name: 'field2',
                 description: null,
                 isRequired: true,
@@ -149,8 +153,8 @@ describe('Category', () => {
                     label: 'option1',
                     insertionFields: [
                       {
-                        $type: 'ParagraphField',
-                        $parameter: {
+                        $class: 'ParagraphField',
+                        $properties: {
                           name: 'field3',
                           description: null,
                           isRequired: true,
@@ -170,8 +174,8 @@ describe('Category', () => {
           name: 'schema2',
           fields: [
             {
-              $type: 'RadioField',
-              $parameter: {
+              $class: 'RadioField',
+              $properties: {
                 name: 'field4',
                 description: null,
                 isRequired: true,
@@ -181,8 +185,8 @@ describe('Category', () => {
                     label: 'option2',
                     insertionFields: [
                       {
-                        $type: 'ParagraphField',
-                        $parameter: {
+                        $class: 'ParagraphField',
+                        $properties: {
                           name: 'field5',
                           description: null,
                           isRequired: true,
@@ -202,8 +206,8 @@ describe('Category', () => {
           name: 'schema3',
           fields: [
             {
-              $type: 'RadioField',
-              $parameter: {
+              $class: 'RadioField',
+              $properties: {
                 name: 'field6',
                 description: null,
                 isRequired: true,
@@ -213,8 +217,8 @@ describe('Category', () => {
                     label: 'option3',
                     insertionFields: [
                       {
-                        $type: 'ParagraphField',
-                        $parameter: {
+                        $class: 'ParagraphField',
+                        $properties: {
                           name: 'field7',
                           description: null,
                           isRequired: true,

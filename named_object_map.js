@@ -14,6 +14,13 @@ class NamedObjectMap extends Map {
       this.add(object);
     }
   }
+
+  static fromArray(objects) {
+    const instance = new this();
+    instance.replaceWith(objects);
+
+    return instance;
+  }
 }
 
 module.exports = NamedObjectMap;

@@ -2,6 +2,8 @@
 
 const assert = require('assert');
 
+const Serializable = require('../serializable');
+
 const {
   StringSanitizer,
   ListSanitizer,
@@ -11,18 +13,9 @@ const NamedObjectMap = require('../named_object_map');
 
 const Validators = new NamedObjectMap();
 
-class BaseValidator {
-  constructor(category, parameter = null) {
-    this.category = category;
-    this.parameter = parameter;
-  }
-
+class BaseValidator extends Serializable {
   validate(input) {
     return true;
-  }
-
-  serialize() {
-    return this.parameter;
   }
 }
 
@@ -34,16 +27,18 @@ class StringValidator extends BaseValidator {
 
 class MaxlengthValidator extends StringValidator {
   validate(input) {
-    return (super.validate(input) && input.length <= this.parameter);
+    return (super.validate(input) && input.length <= this.threshold);
   }
 }
+MaxlengthValidator.property('threshold', 0);
 Validators.add(MaxlengthValidator);
 
 class MinlengthValidator extends StringValidator {
   validate(input) {
-    return (super.validate(input) && input.length >= this.parameter);
+    return (super.validate(input) && input.length >= this.threshold);
   }
 }
+MinlengthValidator.property('threshold', 0);
 Validators.add(MinlengthValidator);
 
 class NumericValidator extends StringValidator {
@@ -57,17 +52,19 @@ Validators.add(NumericValidator);
 class MaxvalueValidator extends NumericValidator {
   validate(input) {
     return (super.validate(input) &&
-            Number(input) <= this.parameter);
+            Number(input) <= this.threshold);
   }
 }
+MaxvalueValidator.property('threshold', 0);
 Validators.add(MaxvalueValidator);
 
 class MinvalueValidator extends NumericValidator {
   validate(input) {
     return (super.validate(input) &&
-            Number(input) >= this.parameter);
+            Number(input) >= this.threshold);
   }
 }
+MinvalueValidator.property('threshold', 0);
 Validators.add(MinvalueValidator);
 
 class ListValidator extends BaseValidator {
@@ -78,16 +75,18 @@ class ListValidator extends BaseValidator {
 
 class MaxitemsValidator extends ListValidator {
   validate(input) {
-    return input.length <= this.parameter;
+    return input.length <= this.threshold;
   }
 }
+MaxitemsValidator.property('threshold', 0);
 Validators.add(MaxitemsValidator);
 
 class MinitemsValidator extends ListValidator {
   validate(input) {
-    return input.length >= this.parameter;
+    return input.length >= this.threshold;
   }
 }
+MinitemsValidator.property('threshold', 0);
 Validators.add(MinitemsValidator);
 
 module.exports = Object.assign(Validators, {
