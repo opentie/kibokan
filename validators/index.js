@@ -2,28 +2,18 @@
 
 const assert = require('assert');
 
-const {
-  AbstractSchema,
-  NumberSchema,
-  NullSchema,
-} = require('../lowlevel');
+const Serializable = require('../serializable');
 
 const {
   StringSanitizer,
   ListSanitizer,
 } = require('../sanitizers');
 
-class BaseValidator {
-  constructor(parameter = null) {
-    // this is an abstract class
-    if (this.constructor === BaseValidator) {
-      throw new TypeError('Illigal constructor');
-    }
-    assert(this.constructor.parameterSchema instanceof AbstractSchema);
+const NamedObjectMap = require('../named_object_map');
 
-    this.parameter = this.constructor.parameterSchema.normalize(parameter);
-  }
+const Validators = new NamedObjectMap();
 
+class BaseValidator extends Serializable {
   validate(input) {
     return true;
   }
@@ -37,17 +27,19 @@ class StringValidator extends BaseValidator {
 
 class MaxlengthValidator extends StringValidator {
   validate(input) {
-    return (super.validate(input) && input.length <= this.parameter);
+    return (super.validate(input) && input.length <= this.threshold);
   }
 }
-MaxlengthValidator.parameterSchema = new NumberSchema();
+MaxlengthValidator.property('threshold', 0);
+Validators.add(MaxlengthValidator);
 
 class MinlengthValidator extends StringValidator {
   validate(input) {
-    return (super.validate(input) && input.length >= this.parameter);
+    return (super.validate(input) && input.length >= this.threshold);
   }
 }
-MinlengthValidator.parameterSchema = new NumberSchema();
+MinlengthValidator.property('threshold', 0);
+Validators.add(MinlengthValidator);
 
 class NumericValidator extends StringValidator {
   validate(input) {
@@ -55,23 +47,25 @@ class NumericValidator extends StringValidator {
             !Number.isNaN(Number(input)));
   }
 }
-NumericValidator.parameterSchema = new NullSchema();
+Validators.add(NumericValidator);
 
 class MaxvalueValidator extends NumericValidator {
   validate(input) {
     return (super.validate(input) &&
-            Number(input) <= this.parameter);
+            Number(input) <= this.threshold);
   }
 }
-MaxvalueValidator.parameterSchema = new NumberSchema();
+MaxvalueValidator.property('threshold', 0);
+Validators.add(MaxvalueValidator);
 
 class MinvalueValidator extends NumericValidator {
   validate(input) {
     return (super.validate(input) &&
-            Number(input) >= this.parameter);
+            Number(input) >= this.threshold);
   }
 }
-MinvalueValidator.parameterSchema = new NumberSchema();
+MinvalueValidator.property('threshold', 0);
+Validators.add(MinvalueValidator);
 
 class ListValidator extends BaseValidator {
   static get sanitizer() {
@@ -81,19 +75,21 @@ class ListValidator extends BaseValidator {
 
 class MaxitemsValidator extends ListValidator {
   validate(input) {
-    return input.length <= this.parameter;
+    return input.length <= this.threshold;
   }
 }
-MaxitemsValidator.parameterSchema = new NumberSchema();
+MaxitemsValidator.property('threshold', 0);
+Validators.add(MaxitemsValidator);
 
 class MinitemsValidator extends ListValidator {
   validate(input) {
-    return input.length >= this.parameter;
+    return input.length >= this.threshold;
   }
 }
-MinitemsValidator.parameterSchema = new NumberSchema();
+MinitemsValidator.property('threshold', 0);
+Validators.add(MinitemsValidator);
 
-module.exports = {
+module.exports = Object.assign(Validators, {
   BaseValidator,
   StringValidator,
   MaxlengthValidator,
@@ -104,4 +100,4 @@ module.exports = {
   ListValidator,
   MaxitemsValidator,
   MinitemsValidator,
-};
+});

@@ -1,0 +1,102 @@
+name: "企画"
+rootSchemaName: "企画基本情報"
+schemata:
+  - name: "企画基本情報"
+    fields:
+      - $class: text
+        $parameter:
+          name: "企画名"
+          description: |
+            企画名を入力してください
+          required: true
+          parameters:
+          validators:
+            - $class: maxlength
+              $parameter: 20
+      - $class: text
+        $parameter:
+          name: "企画名ふりがな"
+          description: |
+            企画名のふりがなを入力してください
+          required: true
+      - $class: text
+        $parameter:
+          name: "企画団体名"
+          description: |
+            企画を主催する団体名を入力してください
+          required: true
+      - $class: text
+        $parameter:
+          name: "企画団体名ふりがな"
+          description: |
+            企画団体名のふりがなを入力してください
+          required: true
+      - $class: paragraph
+        $parameter:
+          name: "企画概要"
+          description: |
+            企画の概要を入力してください
+          required: true
+      - $class: radio
+        $parameter:
+          name: "企画実施場所"
+          description: |
+            企画を実施する場所を選択してください。
+            (希望数に応じて後ほど変更をお願いする場合があります)
+          required: true
+          options:
+            - label: 屋内(会館以外)
+              attachmentNames:
+                - "屋内企画基本情報"
+            - label: 会館屋内
+            - label: 屋外
+              attachmentNames:
+                - "屋外企画基本情報"
+            - label: ステージ
+              # TODO
+
+  - name: "屋内企画基本情報"
+    fields:
+      - $class: radio
+        $parameter:
+          name: "希望実施エリア"
+          required: true
+          options:
+            - label: "エリア未確定"
+            - label: "第一エリア"
+            - label: "第二・第三エリア"
+            - label: "大芸エリア"
+      - $class: radio
+        $parameter:
+          name: "雙峰祭一日目への参加希望"
+          required: true
+          options:
+            - label: "希望する"
+            - label: "希望しない"
+      - $class: radio
+        $parameters:
+          name: "雙峰祭二日目への参加希望"
+          required: true
+          options:
+            - label: "希望する"
+            - label: "希望しない"
+
+  - name: "屋外企画基本情報"
+    fields:
+      - $class: radio
+        $parameter:
+          name: "希望実施エリア"
+          required: true
+          options:
+            - label: "エリア未確定"
+            - label: "第一エリア"
+            - label: "第二・第三エリア"
+              insertionFields:
+                  - name: "雙峰祭前夜祭への参加希望"
+                    type: radio
+                    required: true
+                    parameters:
+                      options:
+                        - label: "希望する"
+                        - label: "希望しない"
+            - label: "大芸エリア"

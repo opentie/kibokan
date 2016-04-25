@@ -2,89 +2,77 @@
 
 const assert = require('assert');
 
-const {
-  ObjectSchema,
-  ArraySchema,
-  BooleanSchema,
-  StringSchema,
-} = require('./lowlevel');
+const Serializable = require('./serializable');
 
-const Schema = require('./schema');
-const AttachmentSchema = require('./attachment_schema');
+const NamedObjectMap = require('./named_object_map');
 
-class Category {
-  static get serializationFormat() {
-    return new ObjectSchema({
-      extraProperties: false,
-      properties: {
-        name: {
-          required: true,
-          schema: new StringSchema(),
-        },
-        schemata: {
-          required: false,
-          schema: new ArraySchema(),
-          default: []
-        },
-        attachmentSchemata: {
-          required: false,
-          schema: new ArraySchema(),
-          default: []
-        },
-        rootSchemaName: {
-          required: true,
-          schema: new StringSchema(),
-        }
-      }
-    });
+const Form = require('./form');
+const ReferenceForm = require('./reference_form');
+const Fields = require('./fields');
+const Validators = require('./validators');
+const OptionItem = require('./option_item');
+// DIRTY HACK: resolve circular reference
+OptionItem.property('insertionFields', [], [Fields]);
+
+class Category extends Serializable {
+  constructor(initialValues) {
+    super(null, initialValues);
   }
 
-  static deserialize(serializedCategory) {
-    const normalizedCategory =
-            this.serializationFormat.normalize(serializedCategory);
-
-    const { name, rootSchemaName } = normalizedCategory;
-
-    const schemata = normalizedCategory.schemata.
-            map(Schema.deserialize.bind(Schema));
-
-    const attachmentSchemata = normalizedCategory.attachmentSchemata.
-            map(AttachmentSchema.deserialize.bind(AttachmentSchema));
-
-    const instance = new this(
-      name, rootSchemaName, schemata, attachmentSchemata);
-
-    return instance;
+  set forms(forms) {
+    this._forms = NamedObjectMap.fromArray(forms);
   }
 
-  serialize() {
-    // TODO: implement
+  get forms() {
+    return [...this._forms.values()];
   }
 
-  constructor(name, rootSchemaName, schemata, attachmentSchemata) {
-    this.name = name;
-    this.rootSchemaName = rootSchemaName;
-    this.schemata = new Map();
-    this.attachmentSchemata = new Map();
-
-    for (let schema of schemata) {
-      this.schemata.set(schema.name, schema);
-    }
-    for (let attachmentSchema of attachmentSchemata) {
-      this.schemata.set(attachmentSchemata.name, attachmentSchema);
-    }
-
-    this.rootSchema = this.schemata.get(this.rootSchemaName);
-
-    Object.freeze(this);
+  set referenceForms(forms) {
+    this._referenceForms = NamedObjectMap.fromArray(forms);
   }
 
-  resolve(schemaName) {
-    assert(this.schemata.has(schemaName),
-           `no such schema: ${schemaName}`);
+  get referenceForms() {
+    return [...this._referenceForms.values()];
+  }
 
-    return this.schemata.get(schemaName);
+  get rootForm() {
+    return this.resolve(this.rootFormName);
+  }
+
+  resolve(formName) {
+    assert(this._forms.has(formName),
+           `no such form: ${formName}`);
+
+    return this._forms.get(formName);
+  }
+
+  createForm(...args) {
+    return new Form(this, ...args);
+  }
+
+  createReferenceForm(...args) {
+    return new ReferenceForm(this, ...args);
+  }
+
+  createField(className, ...args) {
+    const Field = Fields.get(className);
+
+    return new Field(this, ...args);
+  }
+
+  createValidator(className, ...args) {
+    const Validator = Validators.get(className);
+
+    return new Validator(this, ...args);
+  }
+
+  createOptionItem(...args) {
+    return new OptionItem(this, ...args);
   }
 }
+Category.property('name', null);
+Category.property('rootFormName', null);
+Category.property('forms', [], [Form]);
+Category.property('referenceForms', [], [ReferenceForm]);
 
 module.exports = Category;
