@@ -74,7 +74,7 @@ function parse(option) {
 class Serializable {
   static property(name, defaultValue, type = true) {
     if (!Object.hasOwnProperty.call(this, 'properties')) {
-      this.properties = Object.assign({}, this.properties);
+      this.properties = Object.create(this.properties);
     }
     this.properties[name] = {
       defaultValue,
@@ -87,7 +87,7 @@ class Serializable {
 
     const { properties } = this.constructor;
 
-    for (const key of Object.keys(properties)) {
+    for (const key in properties) {
       this[key] = properties[key].defaultValue;
     }
 
@@ -97,7 +97,7 @@ class Serializable {
   deserialize(obj) {
     const { properties } = this.constructor;
 
-    for (const key of Object.keys(properties)) {
+    for (const key in properties) {
       this[key] = properties[key].mapper.deserialize.call(this, obj[key]);
     }
 
@@ -109,13 +109,13 @@ class Serializable {
 
     const obj = {};
 
-    for (const key of Object.keys(properties)) {
+    for (const key in properties) {
       obj[key] = properties[key].mapper.serialize.call(this, this[key]);
     }
 
     return obj;
   }
 }
-Serializable.properties = {};
+Serializable.properties = Object.create(null);
 
 module.exports = Serializable;
