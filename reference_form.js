@@ -2,9 +2,9 @@
 
 const assert = require('assert');
 
-const Schema = require('./schema');
+const Form = require('./form');
 
-class ReferenceSchema extends Schema {
+class ReferenceForm extends Form {
   constructor(category, params) {
     super(category, params);
 
@@ -25,4 +25,4 @@ class ReferenceSchema extends Schema {
   }
 }
 
-module.exports = ReferenceSchema;
+module.exports = ReferenceForm;

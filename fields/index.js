@@ -29,7 +29,7 @@ class BaseField extends Serializable {
     return [];
   }
 
-  retrievePossibleAttachmentSchemata() {
+  retrievePossibleAttachmentForms() {
     return [];
   }
 }
@@ -61,10 +61,10 @@ class SelectableBaseField extends BaseField {
     return Array.prototype.concat.apply([], fields);
   }
 
-  retrievePossibleAttachmentSchemata() {
+  retrievePossibleAttachmentForms() {
     const resolve = this.category.resolve.bind(this.category);
     const attachments = this.options.map((option) => {
-      return option.retrievePossibleAttachmentSchemata();
+      return option.retrievePossibleAttachmentForms();
     });
 
     return Array.prototype.concat.apply([], attachments);

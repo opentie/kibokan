@@ -12,8 +12,8 @@ describe('Category', () => {
     const category = new Category({ name: 'test' });
 
     let field1, field2, field3;
-    const schema1 = category.createSchema({
-      name: 'schema1',
+    const form1 = category.createForm({
+      name: 'form1',
       fields: [
         field1 = category.createField('TextField', {
           name: 'field1',
@@ -41,7 +41,7 @@ describe('Category', () => {
                   validators: []
                 })
               ],
-              attachmentNames: ['schema2'],
+              attachmentNames: ['form2'],
               deadline: null
             })
           ]
@@ -49,8 +49,8 @@ describe('Category', () => {
       ]
     });
 
-    const schema2 = category.createSchema({
-      name: 'schema2',
+    const form2 = category.createForm({
+      name: 'form2',
       fields: [
         category.createField('RadioField', {
           name: 'field4',
@@ -68,7 +68,7 @@ describe('Category', () => {
                   validators: []
                 })
               ],
-              attachmentNames: ['schema3'],
+              attachmentNames: ['form3'],
               deadline: null
             })
           ]
@@ -76,8 +76,8 @@ describe('Category', () => {
       ]
     });
 
-    const schema3 = category.createSchema({
-      name: 'schema3',
+    const form3 = category.createForm({
+      name: 'form3',
       fields: [
         category.createField('RadioField', {
           name: 'field6',
@@ -103,27 +103,27 @@ describe('Category', () => {
       ]
     });
 
-    category.schemata = [schema1, schema2, schema3];
-    category.rootSchemaName = schema1.name;
+    category.forms = [form1, form2, form3];
+    category.rootFormName = form1.name;
 
-    assert(category.resolve('schema1') === schema1);
+    assert(category.resolve('form1') === form1);
 
     assert.deepEqual(
-      schema1.retrieveAllPossibleFields(),
+      form1.retrieveAllPossibleFields(),
       [ field1, field2, field3 ]
     );
 
     assert.deepEqual(
-      schema1.retrievePossibleAttachmentSchemata(),
-      [ schema2, schema3 ]
+      form1.retrievePossibleAttachmentForms(),
+      [ form2, form3 ]
     );
 
     const serialized = {
       name: 'test',
-      rootSchemaName: 'schema1',
-      schemata: [
+      rootFormName: 'form1',
+      forms: [
         {
-          name: 'schema1',
+          name: 'form1',
           fields: [
             {
               $class: 'TextField',
@@ -162,7 +162,7 @@ describe('Category', () => {
                         }
                       }
                     ],
-                    attachmentNames: ['schema2'],
+                    attachmentNames: ['form2'],
                     deadline: null
                   }
                 ]
@@ -171,7 +171,7 @@ describe('Category', () => {
           ]
         },
         {
-          name: 'schema2',
+          name: 'form2',
           fields: [
             {
               $class: 'RadioField',
@@ -194,7 +194,7 @@ describe('Category', () => {
                         }
                       }
                     ],
-                    attachmentNames: ['schema3'],
+                    attachmentNames: ['form3'],
                     deadline: null
                   }
                 ]
@@ -203,7 +203,7 @@ describe('Category', () => {
           ]
         },
         {
-          name: 'schema3',
+          name: 'form3',
           fields: [
             {
               $class: 'RadioField',
@@ -235,7 +235,7 @@ describe('Category', () => {
           ]
         }
       ],
-      referenceSchemata: [],
+      referenceForms: [],
     };
 
     assert.deepEqual(category.serialize(), serialized);
@@ -243,9 +243,9 @@ describe('Category', () => {
     const category2 = new Category();
     category2.deserialize(serialized);
     assert(category2.name === 'test');
-    assert(category2.rootSchemaName === 'schema1');
-    assert(category2.schemata.length === 3);
-    assert(category2.schemata[0].name === 'schema1');
+    assert(category2.rootFormName === 'form1');
+    assert(category2.forms.length === 3);
+    assert(category2.forms[0].name === 'form1');
   });
 });
 

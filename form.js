@@ -7,7 +7,7 @@ const NamedObjectMap = require('./named_object_map');
 
 const Fields = require('./fields');
 
-class Schema extends Serializable {
+class Form extends Serializable {
   set fields(fields) {
     if (fields.length === 2 && fields[0] === undefined) {
       console.log(fields);
@@ -30,15 +30,15 @@ class Schema extends Serializable {
     return Array.prototype.concat.apply([], fields);
   }
 
-  retrievePossibleAttachmentSchemata() {
+  retrievePossibleAttachmentForms() {
     const schemata = this.fields.map((field) => {
-      return field.retrievePossibleAttachmentSchemata();
+      return field.retrievePossibleAttachmentForms();
     });
 
     return Array.prototype.concat.apply([], schemata);
   }
 }
-Schema.property('name', '');
-Schema.property('fields', [], [Fields]);
+Form.property('name', '');
+Form.property('fields', [], [Fields]);
 
-module.exports = Schema;
+module.exports = Form;

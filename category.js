@@ -6,8 +6,8 @@ const Serializable = require('./serializable');
 
 const NamedObjectMap = require('./named_object_map');
 
-const Schema = require('./schema');
-const ReferenceSchema = require('./reference_schema');
+const Form = require('./form');
+const ReferenceForm = require('./reference_form');
 const Fields = require('./fields');
 const Validators = require('./validators');
 const OptionItem = require('./option_item');
@@ -19,39 +19,39 @@ class Category extends Serializable {
     super(null, initialValues);
   }
 
-  set schemata(schemata) {
-    this._schemata = NamedObjectMap.fromArray(schemata);
+  set forms(forms) {
+    this._forms = NamedObjectMap.fromArray(forms);
   }
 
-  get schemata() {
-    return [...this._schemata.values()];
+  get forms() {
+    return [...this._forms.values()];
   }
 
-  set referenceSchemata(schemata) {
-    this._referenceSchemata = NamedObjectMap.fromArray(schemata);
+  set referenceForms(forms) {
+    this._referenceForms = NamedObjectMap.fromArray(forms);
   }
 
-  get referenceSchemata() {
-    return [...this._referenceSchemata.values()];
+  get referenceForms() {
+    return [...this._referenceForms.values()];
   }
 
-  get rootSchema() {
-    return this.resolve(this.rootSchemaName);
+  get rootForm() {
+    return this.resolve(this.rootFormName);
   }
 
-  resolve(schemaName) {
-    assert(this._schemata.has(schemaName),
-           `no such schema: ${schemaName}`);
+  resolve(formName) {
+    assert(this._forms.has(formName),
+           `no such form: ${formName}`);
 
-    return this._schemata.get(schemaName);
+    return this._forms.get(formName);
   }
 
-  createSchema(...args) {
-    return new Schema(this, ...args);
+  createForm(...args) {
+    return new Form(this, ...args);
   }
 
-  createReferenceSchema(...args) {
-    return new ReferenceSchema(this, ...args);
+  createReferenceForm(...args) {
+    return new ReferenceForm(this, ...args);
   }
 
   createField(className, ...args) {
@@ -71,8 +71,8 @@ class Category extends Serializable {
   }
 }
 Category.property('name', null);
-Category.property('rootSchemaName', null);
-Category.property('schemata', [], [Schema]);
-Category.property('referenceSchemata', [], [ReferenceSchema]);
+Category.property('rootFormName', null);
+Category.property('forms', [], [Form]);
+Category.property('referenceForms', [], [ReferenceForm]);
 
 module.exports = Category;

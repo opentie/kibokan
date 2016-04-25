@@ -3,10 +3,10 @@ const Serializable = require('./serializable');
 const Fields = require('./fields');
 
 class OptionItem extends Serializable {
-  retrievePossibleAttachmentSchemata() {
+  retrievePossibleAttachmentForms() {
     const resolve = this.category.resolve.bind(this.category);
-    const attachments = this.attachmentNames.map(resolve).map((schema) => {
-      return [schema].concat(schema.retrievePossibleAttachmentSchemata());
+    const attachments = this.attachmentNames.map(resolve).map((form) => {
+      return [form].concat(form.retrievePossibleAttachmentForms());
     });
 
     return Array.prototype.concat.apply([], attachments);
