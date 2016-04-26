@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --harmony --harmony_destructuring --harmony_default_parameters --require intelli-espower-loader",
     "start": "node --harmony --harmony_destructuring --harmony_default_parameters ./db/index.js",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js",
+    "repl": "node --harmony --harmony_destructuring --harmony_default_parameters"
   },
   "repository": {
     "type": "git",

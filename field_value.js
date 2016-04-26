@@ -1,11 +1,23 @@
 'use strict';
 
-const Serializable = require('./serializable');
-const NamedObjectMap = require('./named_object_map');
+class FieldValue {
+  constructor(field, value) {
+    this.field = field;
 
-class FieldValue extends Serializable {
+    const { sanitizer, validators } = this.field;
+    this.value = sanitizer.sanitize(value);
+    this.isMissing = this.field.isRequired && sanitizer.isZero(this.value);
+    this.validities = validators.
+      map((validator) => validator.validate(this.value));
+    this.insertionFields = this.field.retrieveInsertionFields(this.value);
+    this.isValid = !this.isMissing && this.validities.every(v => v);
+
+    Object.freeze(this);
+  }
+
+  get name() {
+    return this.field.name;
+  }
 }
-FieldValue.property('name', '');
-FieldValue.property('value', null);
 
 module.exports = FieldValue;

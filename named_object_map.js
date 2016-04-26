@@ -2,7 +2,7 @@ const assert = require('assert');
 
 class NamedObjectMap extends Map {
   add(object) {
-    assert(Object.hasOwnProperty.call(object, 'name'));
+    assert('name' in object);
 
     this.set(object.name, object);
   }

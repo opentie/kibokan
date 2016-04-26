@@ -11,6 +11,7 @@ const OptionItem = require('../option_item');
 const {
   StringSanitizer,
   ListSanitizer,
+  OptionSanitizer,
 } = require('../sanitizers');
 
 const Fields = new NamedObjectMap();
@@ -21,8 +22,12 @@ function isCompatibleClass (expected, actual) {
 }
 
 class BaseField extends Serializable {
-  validate(input) {
-    return this.validators.filter((validator) => !validator.validate(input));
+  get sanitizer() {
+    throw new Error('not implemented');
+  }
+
+  retrieveInsertionFields(input) {
+    return [];
   }
 
   retrievePossibleInsertionFields() {
@@ -35,8 +40,8 @@ BaseField.property('isRequired', false);
 BaseField.property('validators', [], [Validators]);
 
 class StringBaseField extends BaseField {
-  static get sanitizer() {
-    return StringSanitizer;
+  get sanitizer() {
+    return new StringSanitizer();
   }
 }
 
@@ -49,6 +54,29 @@ class ParagraphField extends StringBaseField {
 Fields.add(ParagraphField);
 
 class SelectableBaseField extends BaseField {
+  get sanitizer() {
+    return new OptionSanitizer(this.options.map(option => option.label));
+  }
+
+  set options(options) {
+    this.optionsMap = NamedObjectMap.fromArray(options);
+  }
+
+  get options() {
+    return [...this.optionsMap.values()];
+  }
+
+  retrieveInsertionFields(input) {
+    if (this.sanitizer.isZero(input)) {
+      return [];
+    }
+
+    const optionItem = this.optionsMap.get(input);
+    assert(optionItem !== undefined);
+
+    return optionItem.insertionFields;
+  }
+
   retrievePossibleInsertionFields() {
     const fields = this.options.map((option) => {
       return option.insertionFields;

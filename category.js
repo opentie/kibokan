@@ -36,6 +36,7 @@ class Category extends Serializable {
     return this._forms.get(formName);
   }
 
+  // helper methods
   createForm(...args) {
     return new Form(this, ...args);
   }
