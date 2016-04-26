@@ -98,6 +98,8 @@ class Serializable {
     const { properties } = this.constructor;
 
     for (const key in properties) {
+      assert(Object.hasOwnProperty.call(obj, key), `missing property: ${key}`);
+
       this[key] = properties[key].mapper.deserialize.call(this, obj[key]);
     }
 

@@ -1,23 +1,54 @@
 'use strict';
 
-const Serializable = require('./serializable');
+const assert = require('assert');
+
 const NamedObjectMap = require('./named_object_map');
 
-const FormValue = require('./form_value');
-
-class Entity extends Serializable {
-  constructor(category) {
+class Entity {
+  constructor(category, document) {
     this.category = category;
+
+    // TODO: normalize
+    this.document = document;
   }
 
-  set formValues(formValues) {
-    this._formValues = NamedObjectMap.fromArray(formValues);
+  retrieveAttachableFormsMap() {
+    return NamedObjectMap.fromArray(
+      this.category.forms.filter(
+        ({ compiledAttachable }) => compiledAttachable(this.document)));
   }
 
-  get fromValues() {
-    return [...this._formValues.values()];
+  resolveForm(formName) {
+    const formsMap = this.retrieveAttachableFormsMap();
+    assert(formsMap.has(formName), `not attachable form: ${formName}`);
+
+    return formsMap.get(formName);
+  }
+
+  update(formValue) {
+    const formsMap = this.retrieveAttachableFormsMap();
+    assert(formsMap.has(formValue.name));
+
+    if (!formValue.isValid) {
+      return {
+        isSuccessful: false,
+        changes: [],
+      };
+    }
+
+    const hasFormValue = (Object.hasOwnProperty.call(this.document, formValue.name));
+    const changeType = hasFormValue ? 'replacement' : 'addition';
+
+    this.document[formValue.name] = formValue.value;
+
+    // TODO: normalize
+    return {
+      isSuccessful: true,
+      changes: [
+        { type: changeType, formName: formValue.name }
+      ], // FIXME: it should contain results of normalization
+    };
   }
 }
-Entity.property('formValues', [], [FormValue]);
 
 module.exports = Entity;

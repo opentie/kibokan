@@ -1,25 +1,21 @@
 'use strict';
 
 class BaseSanitizer {
-  constructor(input) {
-    this.input = input;
-  }
-
   get zeroValue() {
     throw new Error('Not implemented');
   }
 
-  get isZero() {
-    return this.zeroValue === this.sanitize();
+  isZero(input) {
+    return this.zeroValue === this.sanitize(input);
   }
 
-  check() {
+  check(input) {
     return true;
   }
 
-  sanitize() {
-    if (this.check()) {
-      return this.input;
+  sanitize(input) {
+    if (this.check(input)) {
+      return input;
     }
 
     return this.zeroValue;
@@ -31,8 +27,8 @@ class StringSanitizer extends BaseSanitizer {
     return '';
   }
 
-  check() {
-    return typeof this.input === 'string';
+  check(input) {
+    return typeof input === 'string';
   }
 }
 
@@ -41,12 +37,32 @@ class ListSanitizer extends BaseSanitizer {
     return [];
   }
 
-  get isZero() {
-    return this.sanitize().length === 0;
+  isZero(input) {
+    return this.sanitize(input).length === 0;
   }
 
-  check() {
-    return Array.isArray(this.input);
+  check(input) {
+    return Array.isArray(input);
+  }
+}
+
+class OptionSanitizer extends BaseSanitizer {
+  constructor(options) {
+    super();
+
+    this.options = options;
+  }
+
+  get zeroValue() {
+    return null;
+  }
+
+  isZero(input) {
+    return this.sanitize(input) === null;
+  }
+
+  check(input) {
+    return this.options.indexOf(input) !== -1;
   }
 }
 
@@ -54,4 +70,5 @@ module.exports = {
   BaseSanitizer,
   StringSanitizer,
   ListSanitizer,
+  OptionSanitizer,
 };
