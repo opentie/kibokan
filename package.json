@@ -18,7 +18,9 @@
     "url": "https://github.com/opentie/kibokan/issues"
   },
   "homepage": "https://github.com/opentie/kibokan#readme",
-  "dependencies": {},
+  "dependencies": {
+    "minimongo": "^3.8.2"
+  },
   "devDependencies": {
     "eslint": "^2.7.0",
     "intelli-espower-loader": "^1.0.1",

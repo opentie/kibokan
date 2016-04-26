@@ -21,24 +21,19 @@ class Form extends Serializable {
   }
 
   retrieveAllPossibleFields() {
-    const fields =
-            this.fields.map((field) => {
-              return [field].concat(
-                field.retrievePossibleInsertionFields());
-            });
-
-    return Array.prototype.concat.apply([], fields);
-  }
-
-  retrievePossibleAttachmentForms() {
-    const schemata = this.fields.map((field) => {
-      return field.retrievePossibleAttachmentForms();
+    const fields = this.fields.map((field) => {
+      return [field].concat(
+        field.retrievePossibleInsertionFields());
     });
 
-    return Array.prototype.concat.apply([], schemata);
+    return Array.prototype.concat.apply([], fields);
   }
 }
 Form.property('name', '');
 Form.property('fields', [], [Fields]);
+Form.property('release', null);
+Form.property('deadline', null);
+Form.property('attachable', null);
+Form.property('required', null);
 
 module.exports = Form;

@@ -28,10 +28,6 @@ class BaseField extends Serializable {
   retrievePossibleInsertionFields() {
     return [];
   }
-
-  retrievePossibleAttachmentForms() {
-    return [];
-  }
 }
 BaseField.property('name', '');
 BaseField.property('description', '');
@@ -59,15 +55,6 @@ class SelectableBaseField extends BaseField {
     });
 
     return Array.prototype.concat.apply([], fields);
-  }
-
-  retrievePossibleAttachmentForms() {
-    const resolve = this.category.resolve.bind(this.category);
-    const attachments = this.options.map((option) => {
-      return option.retrievePossibleAttachmentForms();
-    });
-
-    return Array.prototype.concat.apply([], attachments);
   }
 }
 SelectableBaseField.property('options', [], [OptionItem]);

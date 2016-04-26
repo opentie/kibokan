@@ -41,7 +41,6 @@ describe('Category', () => {
                   validators: []
                 })
               ],
-              attachmentNames: ['form2'],
               deadline: null
             })
           ]
@@ -68,7 +67,6 @@ describe('Category', () => {
                   validators: []
                 })
               ],
-              attachmentNames: ['form3'],
               deadline: null
             })
           ]
@@ -95,7 +93,6 @@ describe('Category', () => {
                   validators: []
                 })
               ],
-              attachmentNames: [],
               deadline: null
             })
           ]
@@ -113,17 +110,16 @@ describe('Category', () => {
       [ field1, field2, field3 ]
     );
 
-    assert.deepEqual(
-      form1.retrievePossibleAttachmentForms(),
-      [ form2, form3 ]
-    );
-
     const serialized = {
       name: 'test',
       rootFormName: 'form1',
       forms: [
         {
           name: 'form1',
+          deadline: null,
+          release: null,
+          attachable: null,
+          required: null,
           fields: [
             {
               $class: 'TextField',
@@ -162,7 +158,6 @@ describe('Category', () => {
                         }
                       }
                     ],
-                    attachmentNames: ['form2'],
                     deadline: null
                   }
                 ]
@@ -172,6 +167,10 @@ describe('Category', () => {
         },
         {
           name: 'form2',
+          deadline: null,
+          release: null,
+          attachable: null,
+          required: null,
           fields: [
             {
               $class: 'RadioField',
@@ -194,7 +193,6 @@ describe('Category', () => {
                         }
                       }
                     ],
-                    attachmentNames: ['form3'],
                     deadline: null
                   }
                 ]
@@ -204,6 +202,10 @@ describe('Category', () => {
         },
         {
           name: 'form3',
+          deadline: null,
+          release: null,
+          attachable: null,
+          required: null,
           fields: [
             {
               $class: 'RadioField',
@@ -226,7 +228,6 @@ describe('Category', () => {
                         }
                       }
                     ],
-                    attachmentNames: [],
                     deadline: null
                   }
                 ]
@@ -235,7 +236,6 @@ describe('Category', () => {
           ]
         }
       ],
-      referenceForms: [],
     };
 
     assert.deepEqual(category.serialize(), serialized);
