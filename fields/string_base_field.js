@@ -1,3 +1,5 @@
+'use strict';
+
 const { StringSanitizer } = require('../sanitizers');
 
 const BaseField = require('./base_field');

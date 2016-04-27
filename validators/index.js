@@ -1,9 +1,6 @@
 'use strict';
 
-const assert = require('assert');
-
 const NamedObjectMap = require('../named_object_map');
-const Serializable = require('../serializable');
 
 const Validators = new NamedObjectMap();
 

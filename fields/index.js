@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('assert');
-
 const NamedObjectMap = require('../named_object_map');
 
 const Fields = new NamedObjectMap();

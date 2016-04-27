@@ -1,6 +1,6 @@
-const {
-  StringSanitizer,
-} = require('../sanitizers');
+'use strict';
+
+const { StringSanitizer } = require('../sanitizers');
 
 const BaseValidator = require('./base_validator');
 

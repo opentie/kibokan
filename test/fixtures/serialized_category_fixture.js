@@ -95,7 +95,7 @@ function generate() {
         name: 'form3',
         deadline: null,
         release: null,
-        attachable: { "form1.field1": "hey" },
+        attachable: { 'form1.field1': 'hey' },
         isRequired: false,
         fields: [
           {

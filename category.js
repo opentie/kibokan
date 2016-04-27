@@ -16,11 +16,11 @@ class Category extends Serializable {
   }
 
   set forms(forms) {
-    this._forms = NamedObjectMap.fromArray(forms);
+    this.formsMap = NamedObjectMap.fromArray(forms);
   }
 
   get forms() {
-    return [...this._forms.values()];
+    return [...this.formsMap.values()];
   }
 
   get rootForm() {
@@ -28,9 +28,9 @@ class Category extends Serializable {
   }
 
   resolve(formName) {
-    assert(this._forms.has(formName), `no such form: ${formName}`);
+    assert(this.formsMap.has(formName), `no such form: ${formName}`);
 
-    return this._forms.get(formName);
+    return this.formsMap.get(formName);
   }
 
   // helper methods

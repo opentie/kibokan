@@ -1,3 +1,5 @@
+'use strict';
+
 const Serializable = require('./serializable');
 
 const Fields = require('./fields');

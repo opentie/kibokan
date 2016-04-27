@@ -1,3 +1,5 @@
+'use strict';
+
 const StringValidator = require('./string_validator');
 
 class MaxlengthValidator extends StringValidator {

@@ -1,3 +1,5 @@
+'use strict';
+
 const Serializable = require('../serializable');
 
 const Validators = require('../validators');

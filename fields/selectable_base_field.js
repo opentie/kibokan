@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require('assert');
 
 const NamedObjectMap = require('../named_object_map');
@@ -29,15 +31,14 @@ class SelectableBaseField extends BaseField {
     }
 
     const optionItem = this.optionsMap.get(input);
-    assert(optionItem !== undefined);
+    assert(typeof optionItem !== 'undefined');
 
     return optionItem.insertionFields;
   }
 
   retrievePossibleInsertionFields() {
-    const fields = this.options.map((option) => {
-      return option.insertionFields;
-    });
+    const fields = this.options.
+            map(option => option.insertionFields);
 
     return Array.prototype.concat.apply([], fields);
   }

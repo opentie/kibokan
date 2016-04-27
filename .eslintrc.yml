@@ -5,10 +5,10 @@ env:
 extends: 'eslint:recommended'
 rules:
   accessor-pairs: error
-  array-bracket-spacing: error
+  array-bracket-spacing: 'off'
   array-callback-return: error
   arrow-body-style: error
-  arrow-parens: error
+  arrow-parens: 'off'
   arrow-spacing: error
   block-scoped-var: error
   block-spacing: error
@@ -159,7 +159,7 @@ rules:
   no-useless-escape: error
   no-var: error
   no-void: error
-  no-warning-comments: error
+  no-warning-comments: warn
   no-whitespace-before-property: error
   no-with: error
   object-curly-spacing:

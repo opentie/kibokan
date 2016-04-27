@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('assert');
-
 const { compileDocumentSelector } = require('minimongo/src/selector');
 
 const Serializable = require('./serializable');
@@ -11,21 +9,17 @@ const Fields = require('./fields');
 
 class Form extends Serializable {
   set fields(fields) {
-    if (fields.length === 2 && fields[0] === undefined) {
-      throw new Error();
-    }
-    this._fields = NamedObjectMap.fromArray(fields);
+    this.fieldsMap = NamedObjectMap.fromArray(fields);
   }
 
   get fields() {
-    return [...this._fields.values()];
+    return [...this.fieldsMap.values()];
   }
 
   retrieveAllPossibleFields() {
-    const fields = this.fields.map((field) => {
-      return [field].concat(
-        field.retrievePossibleInsertionFields());
-    });
+    const fields = this.fields.
+            map(field =>
+                [field].concat(field.retrievePossibleInsertionFields()));
 
     return Array.prototype.concat.apply([], fields);
   }

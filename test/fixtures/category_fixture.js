@@ -5,7 +5,12 @@ const Category = require('../../category');
 function generate() {
   const category = new Category({ name: 'test' });
 
+  /* eslint-disable init-declarations */
+
   let field1, field2, field3;
+
+  /* eslint-enable init-declarations */
+
   const form1 = category.createForm({
     name: 'form1',
     isRequired: true,
@@ -75,7 +80,7 @@ function generate() {
   const form3 = category.createForm({
     name: 'form3',
     isRequired: false,
-    attachable: { "form1.field1": "hey" },
+    attachable: { 'form1.field1': 'hey' },
     fields: [
       category.createField('RadioField', {
         name: 'field6',

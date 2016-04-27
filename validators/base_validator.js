@@ -1,3 +1,5 @@
+'use strict';
+
 const Serializable = require('../serializable');
 
 class BaseValidator extends Serializable {

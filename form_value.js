@@ -22,9 +22,9 @@ class FormValue {
     const fieldValue = new FieldValue(field, rawValue[field.name]);
     this.fieldValues.add(fieldValue);
 
-    fieldValue.insertionFields.map((insertionField) => {
-      return this.constructFieldValues(rawValue, insertionField);
-    });
+    fieldValue.insertionFields.
+      map(insertionField =>
+          this.constructFieldValues(rawValue, insertionField));
   }
 
   get name() {

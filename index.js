@@ -1,3 +1,5 @@
+'use strict';
+
 const NamedObjectMap = require('./named_object_map');
 const Serializable = require('./serializable');
 

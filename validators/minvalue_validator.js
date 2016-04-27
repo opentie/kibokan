@@ -1,3 +1,5 @@
+'use strict';
+
 const NumericValidator = require('./numeric_validator');
 
 class MinvalueValidator extends NumericValidator {

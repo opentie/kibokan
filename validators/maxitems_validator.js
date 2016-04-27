@@ -1,3 +1,5 @@
+'use strict';
+
 const ListValidator = require('./list_validator');
 
 class MaxitemsValidator extends ListValidator {

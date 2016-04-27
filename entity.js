@@ -26,8 +26,7 @@ class Entity {
   }
 
   update(formValue) {
-    const formsMap = this.retrieveAttachableFormsMap();
-    assert(formsMap.has(formValue.name));
+    assert(this.resolveForm(formValue.name) === formValue.form);
 
     if (!formValue.isValid) {
       return {
@@ -36,7 +35,8 @@ class Entity {
       };
     }
 
-    const hasFormValue = (Object.hasOwnProperty.call(this.document, formValue.name));
+    const hasFormValue =
+            (Object.hasOwnProperty.call(this.document, formValue.name));
     const changeType = hasFormValue ? 'replacement' : 'addition';
 
     this.document[formValue.name] = formValue.value;

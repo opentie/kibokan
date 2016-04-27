@@ -4,7 +4,10 @@ const assert = require('assert');
 
 const NamedObjectMap = require('./named_object_map');
 
-function id(val) { return val; }
+function id(val) {
+  return val;
+}
+
 const idMapper = {
   serialize: id,
   deserialize: id,
@@ -16,7 +19,8 @@ function createInstanceMapper(Class) {
       return instance.serialize();
     },
     deserialize: function deserializeInstance(properties) {
-      const instance = new Class(this.category); // TODO: kimoi
+      // TODO: kimoi
+      const instance = new Class(this.category);
 
       return instance.deserialize(properties);
     }
@@ -61,6 +65,7 @@ function parse(option) {
     assert(option.length === 1);
 
     const itemMapper = parse(option[0]);
+
     return createArrayMapper(itemMapper);
   }
 
@@ -87,9 +92,13 @@ class Serializable {
 
     const { properties } = this.constructor;
 
+    /* eslint-disable guard-for-in */
+
     for (const key in properties) {
       this[key] = properties[key].defaultValue;
     }
+
+    /* eslint-enable guard-for-in */
 
     Object.assign(this, initialValues);
   }
@@ -97,11 +106,15 @@ class Serializable {
   deserialize(obj) {
     const { properties } = this.constructor;
 
+    /* eslint-disable guard-for-in */
+
     for (const key in properties) {
       assert(Object.hasOwnProperty.call(obj, key), `missing property: ${key}`);
 
       this[key] = properties[key].mapper.deserialize.call(this, obj[key]);
     }
+
+    /* eslint-enable guard-for-in */
 
     return this;
   }
@@ -111,9 +124,13 @@ class Serializable {
 
     const obj = {};
 
+    /* eslint-disable guard-for-in */
+
     for (const key in properties) {
       obj[key] = properties[key].mapper.serialize.call(this, this[key]);
     }
+
+    /* eslint-enable guard-for-in */
 
     return obj;
   }

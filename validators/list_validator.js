@@ -1,3 +1,5 @@
+'use strict';
+
 const { ListSanitizer } = require('../sanitizers');
 
 const BaseValidator = require('./base_validator');
