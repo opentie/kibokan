@@ -23,8 +23,11 @@
     "node": "~6.0.0"
   },
   "dependencies": {
+    "koa": "^1.2.0",
     "koa-body": "^1.4.0",
-    "minimongo": "^3.8.2"
+    "koa-router": "^5.4.0",
+    "minimongo": "^3.8.2",
+    "mongodb": "^2.1.17"
   },
   "devDependencies": {
     "babel": "^6.5.2",

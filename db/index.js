@@ -2,15 +2,16 @@ const MONGODB_URL = 'mongodb://localhost:27017/kibokan_test';
 
 const assert = require('assert');
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');
 
 const koa = require('koa');
 const Router = require('koa-router');
+const koaBody = require('koa-body');
 
 const app = koa();
-const router = new Router();
+const nsRouter = new Router();
 
-const { Category } = require('../');
+const Category = require('../category');
 
 const Categories = {
   *show() {
@@ -19,32 +20,68 @@ const Categories = {
     this.body = category.serialize();
   },
 
-  RootSchema: {
-    *show(next) {
-      const { category, params } = this;
+  *_category(next) {
+    const { db, params } = this;
 
-      this.body = category.rootSchema;
+    const serializedCategory = yield db.collection('categories').findOne({
+      name: params.category_name
+    });
+
+    this.category = new Category();
+    this.category.deserialize(serializedCategory);
+
+    yield next;
+  },
+
+  Forms: {
+  },
+  Entities: {
+    *show() {
+      const { db, category, params } = this;
+      const { entity_id } = params;
+
+      const serializedEntity = yield db.collection('entities').findOne({
+        _category_name: category.name,
+        _id: ObjectID(entity_id),
+      });
+
+      this.body = serializedEntity;
+    },
+    *bulk() {
+      const { db, category, params, request } = this;
+      const ids = request.body.ids.map(ObjectID);
+
+      const serializedEntities = yield db.collection('entities').find({
+        _category_name: category.name,
+        _id: { $in: ids },
+      }).toArray();
+
+      this.body = serializedEntities;
     }
   }
 };
 
-router.get('/categories/:category_name/root_schema', Categories.RootSchema.show);
+function *ok() {
+  this.body = "it's ok";
+}
 
-router.use('/categories/:category_name', function *(next) {
-  const { db, params } = this;
-
-  const serializedCategory = yield db.collection('categories').findOne({
-    name: params.category_name
-  });
-
-  this.category = Category.deserialize(serializedCategory);
-
-  yield next;
-});
-
-app.use(function *(next) {
+function *injectDB(next) {
   this.db = yield MongoClient.connect(MONGODB_URL);
   yield next;
-});
-app.use(router.routes());
+}
+
+nsRouter.get('/', ok);
+nsRouter.use('/namespaces/:namespace', ...(() => {
+  const router = new Router();
+
+  router.use('/categories/:category_name', Categories._category);
+  router.post('/categories/:category_name/entities/bulk', Categories.Entities.bulk);
+  router.get('/categories/:category_name/entities/:entity_id', Categories.Entities.show);
+
+  return [router.routes(), router.allowedMethods()];
+})());
+
+app.use(koaBody());
+app.use(injectDB);
+app.use(nsRouter.routes());
 app.listen(8124);
