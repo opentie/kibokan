@@ -2,16 +2,13 @@
 
 const assert = require('assert');
 
-const Serializable = require('./serializable');
-
 const NamedObjectMap = require('./named_object_map');
+const Serializable = require('./serializable');
 
 const Form = require('./form');
 const Fields = require('./fields');
 const Validators = require('./validators');
 const OptionItem = require('./option_item');
-// DIRTY HACK: resolve circular references
-OptionItem.property('insertionFields', [], [Fields]);
 
 class Category extends Serializable {
   constructor(initialValues) {

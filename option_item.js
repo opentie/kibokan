@@ -8,6 +8,7 @@ class OptionItem extends Serializable {
     return this.label;
   }
 }
+
 OptionItem.property('label', '');
 OptionItem.property('insertionFields', [], [Fields]);
 OptionItem.property('deadline', '', true);
