@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --harmony --harmony_destructuring --harmony_default_parameters --require intelli-espower-loader",
-    "start": "node --harmony --harmony_destructuring --harmony_default_parameters ./db/index.js",
-    "lint": "eslint **/*.js",
-    "repl": "node --harmony --harmony_destructuring --harmony_default_parameters"
+    "test": "mocha --require intelli-espower-loader",
+    "start": "node ./db/index.js",
+    "dev": "node-dev ./db/index.js",
+    "lint": "eslint **/*.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,11 @@
     "url": "https://github.com/opentie/kibokan/issues"
   },
   "homepage": "https://github.com/opentie/kibokan#readme",
+  "engines": {
+    "node": "~6.0.0"
+  },
   "dependencies": {
+    "koa-body": "^1.4.0",
     "minimongo": "^3.8.2"
   },
   "devDependencies": {
