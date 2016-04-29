@@ -147,6 +147,16 @@ class Serializable {
   static resolve() {
     return Promise.reject(new Error('not implemented'));
   }
+
+  static primaryKey() {
+    const Class = this.constructor;
+    if ('primaryKey' in Class &&
+          Object.hasOwnProperty(this, Class.primaryKey)) {
+      return this[Class.primaryKey];
+    }
+
+    return void(0);
+  }
 }
 Serializable.properties = Object.create(null);
 Serializable.references = Object.create(null);
