@@ -148,7 +148,7 @@ class Serializable {
     return Promise.reject(new Error('not implemented'));
   }
 
-  static primaryKey() {
+  get primaryKeyValue() {
     const Class = this.constructor;
     if ('primaryKey' in Class &&
           Object.hasOwnProperty(this, Class.primaryKey)) {
@@ -156,6 +156,13 @@ class Serializable {
     }
 
     return void(0);
+  }
+
+  set primaryKeyValue(value) {
+    const Class = this.constructor;
+    assert('primaryKey' in Class);
+
+    this[Class.primaryKey] = value;
   }
 }
 Serializable.properties = Object.create(null);
