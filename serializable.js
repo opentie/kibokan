@@ -2,24 +2,29 @@
 
 const assert = require('assert');
 
+const { camelize, decamelize } = require('humps');
+
 const NamedObjectMap = require('./named_object_map');
 
-const { createInstanceMapper } = require('./mappers');
+const { identical } = require('./mappers');
 
 class Serializable {
   static property(name, mapper) {
     if (!Object.hasOwnProperty.call(this, 'properties')) {
       this.properties = Object.create(this.properties);
     }
-    this.properties[name] = mapper;
+    const serializedKey = decamelize(name);
+    this.properties[name] = { mapper, serializedKey };
   }
 
   static reference(name, Class) {
     if (!Object.hasOwnProperty.call(this, 'references')) {
       this.references = Object.create(this.references);
     }
-    const idProperty = `${name}_${Class.primaryKey}`;
-    this.references[name] = { Class, idProperty };
+    const serializedKey = decamelize(name);
+    const serializedSuffixedKey = `${serializedKey}_${Class.primaryKey}`;
+    const suffixedKey = camelize(serializedSuffixedKey);
+    this.references[name] = { Class, suffixedKey, serializedSuffixedKey, serializedKey };
   }
 
   static version(version) {
@@ -36,9 +41,12 @@ class Serializable {
     /* eslint-disable guard-for-in */
 
     for (const key in properties) {
-      assert(Object.hasOwnProperty.call(obj, key), `missing property: ${key}`);
+      const { mapper, serializedKey } = properties[key];
 
-      this[key] = properties[key].deserialize.call(this, obj[key]);
+      assert(Object.hasOwnProperty.call(obj, serializedKey),
+             `missing property: ${serializedKey}`);
+
+      this[key] = mapper.deserialize.call(this, obj[serializedKey]);
     }
 
     for (const key in references) {
@@ -66,17 +74,22 @@ class Serializable {
     /* eslint-disable guard-for-in */
 
     for (const key in properties) {
-      obj[key] = properties[key].serialize.call(this, this[key], embeds[key]);
+      assert(key in this);
+      const { mapper, serializedKey } = properties[key];
+      obj[serializedKey] = mapper.serialize.call(this, this[key], embeds[key]);
     }
 
     for (const key in references) {
-      const { Class, idProperty } = references[key];
+      const {
+        Class, suffixedKey,
+        serializedSuffixedKey, serializedKey,
+      } = references[key];
       if (Object.hasOwnProperty.call(embeds, key)) {
         assert(Object.hasOwnProperty.call(this, key),
                `not resolved property: ${key}`);
-        obj[key] = this[key].serialize(embeds[key]);
+        obj[serializedKey] = this[key].serialize(embeds[key]);
       } else {
-        obj[idProperty] = this[key][Class.primaryKey];
+        obj[serializedSuffixedKey] = this[key][Class.primaryKey];
       }
     }
 
@@ -106,11 +119,13 @@ class Serializable {
     /* eslint-disable guard-for-in */
 
     for (const key in references) {
-      const { Class, idProperty } = references[key];
+      const { Class, suffixedKey } = references[key];
       if (!this[key]) {
-        assert(Object.hasOwnProperty.call(this, idProperty));
-        const resolve = Class.resolver(this[idProperty]).
-                then(resolved => resolved.resolveReferences());
+        assert(Object.hasOwnProperty.call(this, suffixedKey));
+        const resolve = Class.resolver(this[suffixedKey]).then(resolved => {
+          this[key] = resolved;
+          resolved.resolveReferences();
+        });
         promises.push(resolve);
       }
     }
@@ -128,7 +143,6 @@ Serializable.properties = Object.create(null);
 Serializable.references = Object.create(null);
 Serializable.version = 0;
 Serializable.primaryKey = 'id';
-//Serializable.property('metadata', {});
-//Serializable.property('namespace', '');
+Serializable.property('metadata', identical);
 
 module.exports = Serializable;

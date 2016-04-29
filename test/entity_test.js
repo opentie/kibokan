@@ -82,15 +82,18 @@ describe('Entity', () => {
     const entity = new Entity();
     entity.category = category;
     entity.document = {};
+    entity.metadata = {};
 
     assert.deepEqual(entity.serialize(), {
       $version: 0,
+      metadata: {},
       category_name: 'test',
       document: {}
     });
 
     assert.deepEqual(entity.serialize({category: {}}), {
       $version: 0,
+      metadata: {},
       category: category.serialize(),
       document: {}
     });
@@ -101,6 +104,7 @@ describe('Entity', () => {
     const entity = new Entity();
     entity.category = category;
     entity.document = {};
+    entity.metadata = {};
 
     Category.resolver = (primaryKey) => {
       return new Promise((resolve, reject) => {

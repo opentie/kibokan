@@ -3,28 +3,33 @@
 function generate() {
   return {
     $version: 0,
+    metadata: {},
+    namespace: 'ns',
     name: 'test',
     forms: [
       {
         $version: 0,
+        metadata: {},
         name: 'form1',
         deadline: null,
         release: null,
         attachable: {},
-        isRequired: true,
+        is_required: true,
         fields: [
           {
             $class: 'TextField',
             $properties: {
               $version: 0,
+              metadata: {},
               name: 'field1',
               description: null,
-              isRequired: true,
+              is_required: true,
               validators: [
                 {
                   $class: 'MaxlengthValidator',
                   $properties: {
                     $version: 0,
+                    metadata: {},
                     threshold: 10
                   },
                 }
@@ -35,22 +40,25 @@ function generate() {
             $class: 'RadioField',
             $properties: {
               $version: 0,
+              metadata: {},
               name: 'field2',
               description: null,
-              isRequired: true,
+              is_required: true,
               validators: [],
               options: [
                 {
                   $version: 0,
+                  metadata: {},
                   label: 'option1',
-                  insertionFields: [
+                  insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
                         $version: 0,
+                        metadata: {},
                         name: 'field3',
                         description: null,
-                        isRequired: true,
+                        is_required: true,
                         validators: []
                       }
                     }
@@ -64,32 +72,36 @@ function generate() {
       },
       {
         $version: 0,
+        metadata: {},
         name: 'form2',
         deadline: null,
         release: null,
         attachable: {},
-        isRequired: true,
+        is_required: true,
         fields: [
           {
             $class: 'RadioField',
             $properties: {
               $version: 0,
+              metadata: {},
               name: 'field4',
               description: null,
-              isRequired: true,
+              is_required: true,
               validators: [],
               options: [
                 {
                   $version: 0,
+                  metadata: {},
                   label: 'option2',
-                  insertionFields: [
+                  insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
                         $version: 0,
+                        metadata: {},
                         name: 'field5',
                         description: null,
-                        isRequired: true,
+                        is_required: true,
                         validators: []
                       }
                     }
@@ -103,32 +115,36 @@ function generate() {
       },
       {
         $version: 0,
+        metadata: {},
         name: 'form3',
         deadline: null,
         release: null,
         attachable: { 'form1.field1': 'hey' },
-        isRequired: false,
+        is_required: false,
         fields: [
           {
             $class: 'RadioField',
             $properties: {
               $version: 0,
+              metadata: {},
               name: 'field6',
               description: null,
-              isRequired: true,
+              is_required: true,
               validators: [],
               options: [
                 {
                   $version: 0,
+                  metadata: {},
                   label: 'option3',
-                  insertionFields: [
+                  insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
                         $version: 0,
+                        metadata: {},
                         name: 'field7',
                         description: null,
-                        isRequired: true,
+                        is_required: true,
                         validators: []
                       }
                     }

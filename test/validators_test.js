@@ -16,6 +16,7 @@ const {
 describe('MaxlengthValidator', () => {
   context('when parameter = 10', () => {
     const validator = new MaxlengthValidator(null);
+    validator.metadata = {};
     validator.threshold = 10;
 
     it('should return true to "goodbye"', () => {
@@ -29,6 +30,7 @@ describe('MaxlengthValidator', () => {
     it('should serialize itself', () => {
       assert.deepEqual(validator.serialize(), {
         $version: 0,
+        metadata: {},
         threshold: 10,
       });
     });
