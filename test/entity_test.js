@@ -80,21 +80,31 @@ describe('Entity', () => {
   it('should be serizlized', () => {
     const { category, form1, form3 } = categoryFixture();
     const entity = new Entity();
+    entity._id = '1';
     entity.category = category;
     entity.document = {};
     entity.metadata = {};
 
     assert.deepEqual(entity.serialize(), {
+      _id: 1,
       _version: 0,
       metadata: {},
       category_name: 'test',
       document: {}
     });
 
-    assert.deepEqual(entity.serialize({category: {}}), {
+    assert.deepEqual(entity.serialize({ category: {} }), {
+      _id: 1,
       _version: 0,
       metadata: {},
       category: category.serialize(),
+      document: {}
+    });
+
+    assert.deepEqual(entity.serialize({}, true), {
+      _version: 0,
+      metadata: {},
+      category_name: 'test',
       document: {}
     });
   });
@@ -106,19 +116,20 @@ describe('Entity', () => {
     entity.document = {};
     entity.metadata = {};
 
-    Category.resolve = (primaryKey) => {
-      return new Promise((resolve, reject) => {
+    Category.resolve = primaryKey =>
+      new Promise((resolve, reject) => {
         if (category.name === primaryKey) {
           return resolve(category);
         }
 
         return reject(new Error('no such category'));
       });
-    };
 
     const entity2 = new Entity();
-    return entity2.deserialize(entity.serialize({category: {}})).
-      resolveReferences().then(() => {
+
+    return entity2.deserialize(entity.serialize({ category: {} })).
+      resolveReferences().
+      then(() => {
         assert(entity.category.name === entity2.category.name);
       });
   });

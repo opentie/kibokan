@@ -56,6 +56,7 @@ class Category extends Serializable {
 Category.property('name', identical);
 Category.property('forms', arrayOf(categorized(Form)));
 Category.property('namespace', identical);
+Category.property('name', identical, true);
 Category.primaryKey = 'name';
 
 module.exports = Category;

@@ -56,5 +56,7 @@ class Entity extends Serializable {
 }
 Entity.property('document', identical);
 Entity.reference('category', Category);
+Entity.primaryKey = '_id';
+Entity.property('_id', identical, true);
 
 module.exports = Entity;
