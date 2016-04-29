@@ -17,8 +17,8 @@ function generate() {
         is_required: true,
         fields: [
           {
-            $class: 'TextField',
-            $properties: {
+            _class: 'TextField',
+            _properties: {
               _version: 0,
               metadata: {},
               name: 'field1',
@@ -26,8 +26,8 @@ function generate() {
               is_required: true,
               validators: [
                 {
-                  $class: 'MaxlengthValidator',
-                  $properties: {
+                  _class: 'MaxlengthValidator',
+                  _properties: {
                     _version: 0,
                     metadata: {},
                     threshold: 10
@@ -37,8 +37,8 @@ function generate() {
             }
           },
           {
-            $class: 'RadioField',
-            $properties: {
+            _class: 'RadioField',
+            _properties: {
               _version: 0,
               metadata: {},
               name: 'field2',
@@ -52,8 +52,8 @@ function generate() {
                   label: 'option1',
                   insertion_fields: [
                     {
-                      $class: 'ParagraphField',
-                      $properties: {
+                      _class: 'ParagraphField',
+                      _properties: {
                         _version: 0,
                         metadata: {},
                         name: 'field3',
@@ -80,8 +80,8 @@ function generate() {
         is_required: true,
         fields: [
           {
-            $class: 'RadioField',
-            $properties: {
+            _class: 'RadioField',
+            _properties: {
               _version: 0,
               metadata: {},
               name: 'field4',
@@ -95,8 +95,8 @@ function generate() {
                   label: 'option2',
                   insertion_fields: [
                     {
-                      $class: 'ParagraphField',
-                      $properties: {
+                      _class: 'ParagraphField',
+                      _properties: {
                         _version: 0,
                         metadata: {},
                         name: 'field5',
@@ -123,8 +123,8 @@ function generate() {
         is_required: false,
         fields: [
           {
-            $class: 'RadioField',
-            $properties: {
+            _class: 'RadioField',
+            _properties: {
               _version: 0,
               metadata: {},
               name: 'field6',
@@ -138,8 +138,8 @@ function generate() {
                   label: 'option3',
                   insertion_fields: [
                     {
-                      $class: 'ParagraphField',
-                      $properties: {
+                      _class: 'ParagraphField',
+                      _properties: {
                         _version: 0,
                         metadata: {},
                         name: 'field7',

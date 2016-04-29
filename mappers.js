@@ -64,15 +64,15 @@ function createPolymorphicMapper(instanceMapper, mapping) {
               serialize.call(this, instance, embeds);
 
       return {
-        $class: Class.name,
-        $properties: serialized,
+        _class: Class.name,
+        _properties: serialized,
       };
     },
-    deserialize: function deserializePolymorphic({ $class, $properties }) {
-      assert(mapping.has($class));
-      const Class = mapping.get($class);
+    deserialize: function deserializePolymorphic({ _class, _properties }) {
+      assert(mapping.has(_class));
+      const Class = mapping.get(_class);
 
-      return instanceMapper(Class).deserialize.call(this, $properties);
+      return instanceMapper(Class).deserialize.call(this, _properties);
     }
   };
 };
