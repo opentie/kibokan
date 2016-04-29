@@ -106,7 +106,6 @@ function generate() {
   });
 
   category.forms = [form1, form2, form3];
-  category.rootFormName = form1.name;
 
   return {
     category,

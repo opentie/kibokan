@@ -3,19 +3,23 @@
 const assert = require('assert');
 
 const NamedObjectMap = require('./named_object_map');
+const Serializable = require('./serializable');
 
-class Entity {
-  constructor(category, document) {
-    this.category = category;
+const FormValue = require('./form_value');
 
-    // TODO: normalize
-    this.document = document;
+class Entity extends Serializable {
+  constructor(initialValues) {
+    super(null, initialValues);
   }
 
-  retrieveAttachableFormsMap() {
-    return NamedObjectMap.fromArray(
-      this.category.forms.filter(
-        ({ compiledAttachable }) => compiledAttachable(this.document)));
+  retrieveAttachableFormsMap(onlyMissing = false) {
+    return NamedObjectMap.fromArray(this.category.forms.filter(form => {
+      if (onlyMissing && Object.hasOwnProperty.call(this.document, form.name)) {
+        return false;
+      }
+
+      return form.isAttachable(this.document);
+    }));
   }
 
   resolveForm(formName) {
@@ -25,30 +29,41 @@ class Entity {
     return formsMap.get(formName);
   }
 
-  update(formValue) {
-    assert(this.resolveForm(formValue.name) === formValue.form);
+  _assign(document) {
+    const availableFormsMap = this.retrieveAttachableFormsMap(true);
+    const updatedForms = [];
 
-    if (!formValue.isValid) {
-      return {
-        isSuccessful: false,
-        changes: [],
-      };
+    for (const form of availableFormsMap.values()) {
+      if (Object.hasOwnProperty.call(document, form.name)) {
+        const formValue = new FormValue(form, document[form.name]);
+        if (!formValue.isValid) {
+          throw new Error('invalid form value');
+        }
+        this.document[form.name] = formValue.value;
+        updatedForms.push(form);
+      }
     }
 
-    const hasFormValue =
-            (Object.hasOwnProperty.call(this.document, formValue.name));
-    const changeType = hasFormValue ? 'replacement' : 'addition';
+    return updatedForms;
+  }
 
-    this.document[formValue.name] = formValue.value;
+  update(document) {
+    this.document = {};
+    let allUpdatedForms = [];
+    let updatedForms = [];
+    while ((updatedForms = this._assign(document)).length > 0) {
+      allUpdatedForms = allUpdatedForms.concat(updatedForms);
+    }
 
-    // TODO: normalize
-    return {
-      isSuccessful: true,
-      changes: [
-        { type: changeType, formName: formValue.name }
-      ], // FIXME: it should contain results of normalization
-    };
+    return allUpdatedForms;
+  }
+
+  normalize() {
+    const document = this.document;
+    return this.update(document);
   }
 }
+Entity.property('category', null);
+Entity.property('document', {});
 
 module.exports = Entity;

@@ -10,7 +10,7 @@ const FormValue = require('../form_value');
 
 describe('Entity', () => {
   it('should', () => {
-    const { category, form1 } = categoryFixture();
+    const { category, form1, form3 } = categoryFixture();
     const entity = new Entity(category, {});
 
     assert.deepEqual(
@@ -18,18 +18,16 @@ describe('Entity', () => {
       ['form1', 'form2']
     );
 
-    const formValue = new FormValue(form1, {
-      field1: 'hey',
-      field2: 'option1',
-      field3: 'foobar',
-    });
-
-    assert.deepEqual(entity.update(formValue), {
-      isSuccessful: true,
-      changes: [
-        { type: 'addition', formName: 'form1' }
-      ]
-    });
+    assert.deepEqual(
+      entity.update({
+        form1: {
+          field1: 'hey',
+          field2: 'option1',
+          field3: 'foobar',
+        }
+      }),
+      [ form1 ]
+    );
 
     assert.deepEqual(entity.document, {
       'form1': {
@@ -44,37 +42,34 @@ describe('Entity', () => {
       ['form1', 'form2', 'form3']
     );
 
-    assert.deepEqual(entity.update(new FormValue(form1, {
-      field1: 'foo',
-      field2: 'option1',
-      field3: 'foobar',
-    })), {
-      isSuccessful: true,
-      changes: [
-        { type: 'replacement', formName: 'form1' }
-      ]
-    });
-
-    assert.deepEqual(entity.document, {
-      'form1': {
-        field1: 'foo',
-        field2: 'option1',
-        field3: 'foobar',
-      }
-    });
-
     assert.deepEqual(
-      [...entity.retrieveAttachableFormsMap().keys()],
-      ['form1', 'form2']
+      entity.update({
+        form1: {
+          field1: 'hey',
+          field2: 'option1',
+          field3: 'foobar',
+        },
+        form3: {
+          field6: 'option3',
+          field7: 'heheyhey',
+        }
+      }),
+      [ form1, form3 ]
     );
 
-    assert.deepEqual(entity.update(new FormValue(form1, {
-      field1: 'foo',
-      field2: 'option2',
-      field3: 'foobar',
-    })), {
-      isSuccessful: false,
-      changes: []
-    });
+    assert.deepEqual(
+      entity.update({
+        form1: {
+          field1: 'boo',
+          field2: 'option1',
+          field3: 'foobar',
+        },
+        form3: {
+          field6: 'option3',
+          field7: 'heheyhey',
+        }
+      }),
+      [ form1 ]
+    );
   });
 });

@@ -23,10 +23,6 @@ class Category extends Serializable {
     return [...this.formsMap.values()];
   }
 
-  get rootForm() {
-    return this.resolve(this.rootFormName);
-  }
-
   resolve(formName) {
     assert(this.formsMap.has(formName), `no such form: ${formName}`);
 
@@ -55,7 +51,6 @@ class Category extends Serializable {
   }
 }
 Category.property('name', null);
-Category.property('rootFormName', null);
 Category.property('forms', [], [Form]);
 
 module.exports = Category;

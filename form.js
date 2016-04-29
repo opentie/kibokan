@@ -24,8 +24,23 @@ class Form extends Serializable {
     return Array.prototype.concat.apply([], fields);
   }
 
-  get compiledAttachable() {
-    return compileDocumentSelector(this.attachable);
+  isAttachable(document) {
+    return this.attachableSelector(document);
+  }
+
+  get attachableSelector() {
+    return this.compiledAttachableSelector ||
+      (this.compiledAttachableSelector =
+       compileDocumentSelector(this.attachable));
+  }
+
+  set attachable(attachable) {
+    this.compiledAttachableSelector = null;
+    this._attachable = attachable;
+  }
+
+  get attachable() {
+    return this._attachable;
   }
 }
 Form.property('name', '');

@@ -11,8 +11,12 @@ class FieldValue {
     const { sanitizer, validators } = this.field;
     this.value = sanitizer.sanitize(value);
     this.isMissing = this.field.isRequired && sanitizer.isZero(this.value);
-    this.validities = validators.
-      map((validator) => validator.validate(this.value));
+    this.validities = validators.map(validator => {
+      return {
+        validator,
+        validity: validator.validate(this.value),
+      };
+    });
     this.insertionFields = this.field.retrieveInsertionFields(this.value);
     this.isValid = !this.isMissing && this.validities.every(id);
 

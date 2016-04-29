@@ -87,6 +87,11 @@ class Serializable {
     };
   }
 
+  static version(version) {
+    assert(typeof version === 'number');
+    this.version = version;
+  }
+
   constructor(category, initialValues = {}) {
     this.category = category || this;
 
@@ -104,7 +109,10 @@ class Serializable {
   }
 
   deserialize(obj) {
-    const { properties } = this.constructor;
+    const { properties, version } = this.constructor;
+
+    assert(obj.$version === version,
+           `incompatible version: ${obj.$version} to ${version}`);
 
     /* eslint-disable guard-for-in */
 
@@ -120,9 +128,11 @@ class Serializable {
   }
 
   serialize() {
-    const { properties } = this.constructor;
+    const { properties, version } = this.constructor;
 
-    const obj = {};
+    const obj = {
+      $version: version,
+    };
 
     /* eslint-disable guard-for-in */
 
@@ -136,5 +146,6 @@ class Serializable {
   }
 }
 Serializable.properties = Object.create(null);
+Serializable.version = 0;
 
 module.exports = Serializable;

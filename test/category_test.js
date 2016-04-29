@@ -38,7 +38,6 @@ describe('Category', () => {
     const category = new Category();
     category.deserialize(serialized);
     assert(category.name === 'test');
-    assert(category.rootFormName === 'form1');
     assert(category.forms.length === 3);
     assert(category.forms[0].name === 'form1');
   });

@@ -1,0 +1,4 @@
+rules:
+  max-statements:
+    - error
+    - 20
