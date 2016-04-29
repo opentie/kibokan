@@ -151,7 +151,7 @@ class Serializable {
   get primaryKeyValue() {
     const Class = this.constructor;
     if ('primaryKey' in Class &&
-          Object.hasOwnProperty(this, Class.primaryKey)) {
+        Object.hasOwnProperty.call(this, Class.primaryKey)) {
       return this[Class.primaryKey];
     }
 
