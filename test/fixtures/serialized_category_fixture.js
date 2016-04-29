@@ -2,13 +2,13 @@
 
 function generate() {
   return {
-    $version: 0,
+    _version: 0,
     metadata: {},
     namespace: 'ns',
     name: 'test',
     forms: [
       {
-        $version: 0,
+        _version: 0,
         metadata: {},
         name: 'form1',
         deadline: null,
@@ -19,7 +19,7 @@ function generate() {
           {
             $class: 'TextField',
             $properties: {
-              $version: 0,
+              _version: 0,
               metadata: {},
               name: 'field1',
               description: null,
@@ -28,7 +28,7 @@ function generate() {
                 {
                   $class: 'MaxlengthValidator',
                   $properties: {
-                    $version: 0,
+                    _version: 0,
                     metadata: {},
                     threshold: 10
                   },
@@ -39,7 +39,7 @@ function generate() {
           {
             $class: 'RadioField',
             $properties: {
-              $version: 0,
+              _version: 0,
               metadata: {},
               name: 'field2',
               description: null,
@@ -47,14 +47,14 @@ function generate() {
               validators: [],
               options: [
                 {
-                  $version: 0,
+                  _version: 0,
                   metadata: {},
                   label: 'option1',
                   insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
-                        $version: 0,
+                        _version: 0,
                         metadata: {},
                         name: 'field3',
                         description: null,
@@ -71,7 +71,7 @@ function generate() {
         ]
       },
       {
-        $version: 0,
+        _version: 0,
         metadata: {},
         name: 'form2',
         deadline: null,
@@ -82,7 +82,7 @@ function generate() {
           {
             $class: 'RadioField',
             $properties: {
-              $version: 0,
+              _version: 0,
               metadata: {},
               name: 'field4',
               description: null,
@@ -90,14 +90,14 @@ function generate() {
               validators: [],
               options: [
                 {
-                  $version: 0,
+                  _version: 0,
                   metadata: {},
                   label: 'option2',
                   insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
-                        $version: 0,
+                        _version: 0,
                         metadata: {},
                         name: 'field5',
                         description: null,
@@ -114,7 +114,7 @@ function generate() {
         ]
       },
       {
-        $version: 0,
+        _version: 0,
         metadata: {},
         name: 'form3',
         deadline: null,
@@ -125,7 +125,7 @@ function generate() {
           {
             $class: 'RadioField',
             $properties: {
-              $version: 0,
+              _version: 0,
               metadata: {},
               name: 'field6',
               description: null,
@@ -133,14 +133,14 @@ function generate() {
               validators: [],
               options: [
                 {
-                  $version: 0,
+                  _version: 0,
                   metadata: {},
                   label: 'option3',
                   insertion_fields: [
                     {
                       $class: 'ParagraphField',
                       $properties: {
-                        $version: 0,
+                        _version: 0,
                         metadata: {},
                         name: 'field7',
                         description: null,

@@ -35,8 +35,8 @@ class Serializable {
   deserialize(obj) {
     const { properties, references, version } = this.constructor;
 
-    assert(obj.$version === version,
-           `incompatible version: ${obj.$version} to ${version}`);
+    assert(obj._version === version,
+           `incompatible version: ${obj._version} to ${version}`);
 
     /* eslint-disable guard-for-in */
 
@@ -68,7 +68,7 @@ class Serializable {
     const { properties, references, version } = this.constructor;
 
     const obj = {
-      $version: version,
+      _version: version,
     };
 
     /* eslint-disable guard-for-in */

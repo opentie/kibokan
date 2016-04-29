@@ -29,7 +29,7 @@ describe('MaxlengthValidator', () => {
 
     it('should serialize itself', () => {
       assert.deepEqual(validator.serialize(), {
-        $version: 0,
+        _version: 0,
         metadata: {},
         threshold: 10,
       });

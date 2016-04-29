@@ -85,14 +85,14 @@ describe('Entity', () => {
     entity.metadata = {};
 
     assert.deepEqual(entity.serialize(), {
-      $version: 0,
+      _version: 0,
       metadata: {},
       category_name: 'test',
       document: {}
     });
 
     assert.deepEqual(entity.serialize({category: {}}), {
-      $version: 0,
+      _version: 0,
       metadata: {},
       category: category.serialize(),
       document: {}
