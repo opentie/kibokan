@@ -5,13 +5,17 @@
 const assert = require('assert');
 
 const categoryFixture = require('./fixtures/category_fixture');
+
 const Entity = require('../entity');
+const Category = require('../category');
 const FormValue = require('../form_value');
 
 describe('Entity', () => {
-  it('should', () => {
+  it('should update forms', () => {
     const { category, form1, form3 } = categoryFixture();
-    const entity = new Entity(category, {});
+    const entity = new Entity();
+    entity.category = category;
+    entity.document = {};
 
     assert.deepEqual(
       [...entity.retrieveAttachableFormsMap().keys()],
@@ -71,5 +75,47 @@ describe('Entity', () => {
       }),
       [ form1 ]
     );
+  });
+
+  it('should be serizlized', () => {
+    const { category, form1, form3 } = categoryFixture();
+    const entity = new Entity();
+    entity.category = category;
+    entity.document = {};
+
+    assert.deepEqual(entity.serialize(), {
+      $version: 0,
+      category_name: 'test',
+      document: {}
+    });
+
+    assert.deepEqual(entity.serialize({category: {}}), {
+      $version: 0,
+      category: category.serialize(),
+      document: {}
+    });
+  });
+
+  it('should be deserialized', () => {
+    const { category, form1, form3 } = categoryFixture();
+    const entity = new Entity();
+    entity.category = category;
+    entity.document = {};
+
+    Category.resolver = (primaryKey) => {
+      return new Promise((resolve, reject) => {
+        if (category.name === primaryKey) {
+          return resolve(category);
+        }
+
+        return reject(new Error('no such category'));
+      });
+    };
+
+    const entity2 = new Entity();
+    return entity2.deserialize(entity.serialize({category: {}})).
+      resolveReferences().then(() => {
+        assert(entity.category.name === entity2.category.name);
+      });
   });
 });

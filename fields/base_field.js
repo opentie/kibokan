@@ -1,6 +1,7 @@
 'use strict';
 
 const Serializable = require('../serializable');
+const { arrayOf, identical, polymorphic, categorized } = require('../mappers');
 
 const Validators = require('../validators');
 
@@ -17,9 +18,9 @@ class BaseField extends Serializable {
     return [];
   }
 }
-BaseField.property('name', '');
-BaseField.property('description', '');
-BaseField.property('isRequired', false);
-BaseField.property('validators', [], [Validators]);
+BaseField.property('name', identical);
+BaseField.property('description', identical);
+BaseField.property('isRequired', identical);
+BaseField.property('validators', arrayOf(polymorphic(categorized, Validators)));
 
 module.exports = BaseField;

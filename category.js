@@ -4,6 +4,7 @@ const assert = require('assert');
 
 const NamedObjectMap = require('./named_object_map');
 const Serializable = require('./serializable');
+const { arrayOf, identical, categorized } = require('./mappers');
 
 const Form = require('./form');
 const Fields = require('./fields');
@@ -11,8 +12,10 @@ const Validators = require('./validators');
 const OptionItem = require('./option_item');
 
 class Category extends Serializable {
-  constructor(initialValues) {
-    super(null, initialValues);
+  constructor() {
+    super();
+
+    this.category = this;
   }
 
   set forms(forms) {
@@ -23,34 +26,35 @@ class Category extends Serializable {
     return [...this.formsMap.values()];
   }
 
-  resolve(formName) {
+  getFormByName(formName) {
     assert(this.formsMap.has(formName), `no such form: ${formName}`);
 
     return this.formsMap.get(formName);
   }
 
   // helper methods
-  createForm(...args) {
-    return new Form(this, ...args);
+  createForm(props) {
+    return Object.assign(new Form(), props, { category: this });
   }
 
-  createField(className, ...args) {
+  createField(className, props) {
     const Field = Fields.get(className);
 
-    return new Field(this, ...args);
+    return Object.assign(new Field(), props, { category: this });
   }
 
-  createValidator(className, ...args) {
+  createValidator(className, props) {
     const Validator = Validators.get(className);
 
-    return new Validator(this, ...args);
+    return Object.assign(new Validator(), props, { category: this });
   }
 
-  createOptionItem(...args) {
-    return new OptionItem(this, ...args);
+  createOptionItem(props) {
+    return Object.assign(new OptionItem(), props, { category: this });
   }
 }
-Category.property('name', null);
-Category.property('forms', [], [Form]);
+Category.property('name', identical);
+Category.property('forms', arrayOf(categorized(Form)));
+Category.primaryKey = 'name';
 
 module.exports = Category;

@@ -4,14 +4,12 @@ const assert = require('assert');
 
 const NamedObjectMap = require('./named_object_map');
 const Serializable = require('./serializable');
+const { identical } = require('./mappers');
 
+const Category = require('./category');
 const FormValue = require('./form_value');
 
 class Entity extends Serializable {
-  constructor(initialValues) {
-    super(null, initialValues);
-  }
-
   retrieveAttachableFormsMap(onlyMissing = false) {
     return NamedObjectMap.fromArray(this.category.forms.filter(form => {
       if (onlyMissing && Object.hasOwnProperty.call(this.document, form.name)) {
@@ -20,13 +18,6 @@ class Entity extends Serializable {
 
       return form.isAttachable(this.document);
     }));
-  }
-
-  resolveForm(formName) {
-    const formsMap = this.retrieveAttachableFormsMap();
-    assert(formsMap.has(formName), `not attachable form: ${formName}`);
-
-    return formsMap.get(formName);
   }
 
   _assign(document) {
@@ -63,7 +54,7 @@ class Entity extends Serializable {
     return this.update(document);
   }
 }
-Entity.property('category', null);
-Entity.property('document', {});
+Entity.property('document', identical);
+Entity.reference('category', Category);
 
 module.exports = Entity;

@@ -3,7 +3,8 @@
 const Category = require('../../category');
 
 function generate() {
-  const category = new Category({ name: 'test' });
+  const category = new Category();
+  category.name = 'test';
 
   /* eslint-disable init-declarations */
 

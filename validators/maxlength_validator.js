@@ -1,5 +1,7 @@
 'use strict';
 
+const { identical } = require('../mappers');
+
 const StringValidator = require('./string_validator');
 
 class MaxlengthValidator extends StringValidator {
@@ -7,6 +9,6 @@ class MaxlengthValidator extends StringValidator {
     return (super.validate(input) && input.length <= this.threshold);
   }
 }
-MaxlengthValidator.property('threshold', 0);
+MaxlengthValidator.property('threshold', identical);
 
 module.exports = MaxlengthValidator;

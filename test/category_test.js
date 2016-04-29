@@ -17,7 +17,7 @@ describe('Category', () => {
       field1, field2, field3,
     } = categoryFixture();
 
-    assert(category.resolve('form1') === form1);
+    assert(category.getFormByName('form1') === form1);
 
     assert.deepEqual(
       form1.retrieveAllPossibleFields(),

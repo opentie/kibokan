@@ -1,5 +1,7 @@
 'use strict';
 
+const { identical } = require('../mappers');
+
 const NumericValidator = require('./numeric_validator');
 
 class MaxvalueValidator extends NumericValidator {
@@ -8,6 +10,6 @@ class MaxvalueValidator extends NumericValidator {
             Number(input) <= this.threshold);
   }
 }
-MaxvalueValidator.property('threshold', 0);
+MaxvalueValidator.property('threshold', identical);
 
 module.exports = MaxvalueValidator;
