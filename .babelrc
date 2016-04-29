@@ -1,7 +1,7 @@
 {
   "presets": [],
   "env": {
-    "development": {
+    "test": {
       "presets": [
         "babel-preset-power-assert"
       ]

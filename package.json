@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require babel-register",
-    "start": "node ./db/index.js",
-    "dev": "node-dev ./db/index.js",
+    "test": "NODE_ENV=test mocha --require babel-register",
     "lint": "eslint **/*.js"
   },
   "repository": {
