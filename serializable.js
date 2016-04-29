@@ -122,7 +122,7 @@ class Serializable {
       const { Class, suffixedKey } = references[key];
       if (!this[key]) {
         assert(Object.hasOwnProperty.call(this, suffixedKey));
-        const resolve = Class.resolver(this[suffixedKey]).then(resolved => {
+        const resolve = Class.resolve(this[suffixedKey]).then(resolved => {
           this[key] = resolved;
           resolved.resolveReferences();
         });
@@ -135,7 +135,7 @@ class Serializable {
     return Promise.all(promises);
   }
 
-  static resolver() {
+  static resolve() {
     return Promise.reject(new Error('not implemented'));
   }
 }

@@ -106,7 +106,7 @@ describe('Entity', () => {
     entity.document = {};
     entity.metadata = {};
 
-    Category.resolver = (primaryKey) => {
+    Category.resolve = (primaryKey) => {
       return new Promise((resolve, reject) => {
         if (category.name === primaryKey) {
           return resolve(category);
