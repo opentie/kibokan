@@ -112,6 +112,7 @@ describe('Entity', () => {
   it('should be deserialized', () => {
     const { category, form1, form3 } = categoryFixture();
     const entity = new Entity();
+    entity._id = 1;
     entity.category = category;
     entity.document = {};
     entity.metadata = {};

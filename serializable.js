@@ -9,12 +9,12 @@ const NamedObjectMap = require('./named_object_map');
 const { identical } = require('./mappers');
 
 class Serializable {
-  static property(name, mapper, weak = false) {
+  static property(name, mapper) {
     if (!Object.hasOwnProperty.call(this, 'properties')) {
       this.properties = Object.create(this.properties);
     }
     const serializedKey = decamelize(name);
-    this.properties[name] = { mapper, serializedKey, weak };
+    this.properties[name] = { mapper, serializedKey };
   }
 
   static reference(name, Class) {
@@ -41,12 +41,13 @@ class Serializable {
     /* eslint-disable guard-for-in */
 
     for (const key in properties) {
-      const { mapper, serializedKey, weak } = properties[key];
+      const { mapper, serializedKey, isSafe } = properties[key];
 
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
         this[key] = mapper.deserialize.call(this, obj[serializedKey]);
       } else {
-        assert(weak, `missing property: ${serializedKey}`);
+        assert(this.constructor.primaryKey === key,
+               `missing property: ${serializedKey}`);
       }
     }
 
@@ -79,12 +80,10 @@ class Serializable {
 
     for (const key in properties) {
       const { mapper, serializedKey, weak } = properties[key];
-      if (key in this &&
-          !(excludePrimaryKey && key === this.constructor.primaryKey)) {
+      if (!(excludePrimaryKey && key === this.constructor.primaryKey)) {
+        assert(key in this, `missing property: ${key}`);
         obj[serializedKey] =
           mapper.serialize.call(this, this[key], embeds[key]);
-      } else {
-        assert(weak, `missing property: ${key}`);
       }
     }
 
