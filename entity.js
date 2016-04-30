@@ -38,7 +38,7 @@ class Entity extends Serializable {
     return updatedForms;
   }
 
-  update(document) {
+  updateDocument(document) {
     this.document = {};
     let allUpdatedForms = [];
     let updatedForms = [];
@@ -46,12 +46,13 @@ class Entity extends Serializable {
       allUpdatedForms = allUpdatedForms.concat(updatedForms);
     }
 
+    Object.freeze(this.document);
     return allUpdatedForms;
   }
 
   normalize() {
     const document = this.document;
-    return this.update(document);
+    return this.updateDocument(document);
   }
 }
 Entity.property('document', identical);

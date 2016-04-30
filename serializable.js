@@ -32,7 +32,7 @@ class Serializable {
     this.version = version;
   }
 
-  deserialize(obj) {
+  deserialize(obj, isPartial = false) {
     const { properties, references, version } = this.constructor;
 
     assert(obj._version === version,
@@ -46,7 +46,7 @@ class Serializable {
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
         this[key] = mapper.deserialize.call(this, obj[serializedKey]);
       } else {
-        assert(this.constructor.primaryKey === key,
+        assert(isPartial || this.constructor.primaryKey === key,
                `missing property: ${serializedKey}`);
       }
     }
@@ -58,7 +58,7 @@ class Serializable {
       } = references[key];
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
         this[key] = new Class().deserialize(obj[serializedKey]);
-      } else {
+      } else if (!isPartial) {
         assert(Object.hasOwnProperty.call(obj, serializedSuffixedKey));
         this[suffixedKey] = obj[serializedSuffixedKey];
       }
