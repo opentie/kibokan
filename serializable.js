@@ -98,7 +98,11 @@ class Serializable {
                `not resolved property: ${key}`);
         obj[serializedKey] = this[key].serialize(embeds[key]);
       } else {
-        obj[serializedSuffixedKey] = this[key][Class.primaryKey];
+        if (key in this) {
+          obj[serializedSuffixedKey] = this[key][Class.primaryKey];
+        } else {
+          obj[serializedSuffixedKey] = this[suffixedKey];
+        }
       }
     }
 
