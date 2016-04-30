@@ -55,5 +55,7 @@ describe('AndOperator', () => {
         { 'formA.fieldB': 2 },
       ]
     });
+
+    op.serialize();
   });
 });

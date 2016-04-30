@@ -168,6 +168,5 @@ class Serializable {
 Serializable.properties = Object.create(null);
 Serializable.references = Object.create(null);
 Serializable.version = 0;
-Serializable.property('metadata', identical);
 
 module.exports = Serializable;

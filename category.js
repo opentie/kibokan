@@ -57,6 +57,7 @@ Category.property('name', identical);
 Category.property('forms', arrayOf(categorized(Form)));
 Category.property('namespace', identical);
 Category.property('name', identical, true);
+Category.property('metadata', identical);
 Category.primaryKey = 'name';
 
 module.exports = Category;

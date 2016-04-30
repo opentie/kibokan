@@ -1,6 +1,8 @@
 'use strict';
 
 const Category = require('../../category');
+const { AndOperator, OrOperator, MatchOperator } = require('../../operators');
+const { LiteralValueOperator } = require('../../operators/value_operators');
 
 function generate() {
   const category = new Category();
@@ -20,33 +22,28 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: true,
-    attachable: {},
+    attachable: Object.assign(new OrOperator(), { operators: [] }),
     fields: [
       field1 = category.createField('TextField', {
-        metadata: {},
         name: 'field1',
         description: null,
         isRequired: true,
         validators: [
           category.createValidator('MaxlengthValidator', {
-            metadata: {},
             threshold: 10
           })
         ]
       }),
       field2 = category.createField('RadioField', {
-        metadata: {},
         name: 'field2',
         description: null,
         isRequired: true,
         validators: [],
         options: [
           category.createOptionItem({
-            metadata: {},
             label: 'option1',
             insertionFields: [
               field3 = category.createField('ParagraphField', {
-                metadata: {},
                 name: 'field3',
                 description: null,
                 isRequired: true,
@@ -66,21 +63,18 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: true,
-    attachable: {},
+    attachable: Object.assign(new OrOperator(), { operators: [] }),
     fields: [
       category.createField('RadioField', {
-        metadata: {},
         name: 'field4',
         description: null,
         isRequired: true,
         validators: [],
         options: [
           category.createOptionItem({
-            metadata: {},
             label: 'option2',
             insertionFields: [
               category.createField('ParagraphField', {
-                metadata: {},
                 name: 'field5',
                 description: null,
                 isRequired: true,
@@ -100,21 +94,32 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: false,
-    attachable: { 'form1.field1': 'hey' },
+    attachable: Object.assign(new OrOperator(), {
+      operators: [
+        Object.assign(new AndOperator(), {
+          operators: [
+            Object.assign(new MatchOperator(), {
+              form: 'form1',
+              field: 'field1',
+              value: Object.assign(new LiteralValueOperator(), {
+                value: 'hey'
+              })
+            })
+          ]
+        })
+      ]
+    }),
     fields: [
       category.createField('RadioField', {
-        metadata: {},
         name: 'field6',
         description: null,
         isRequired: true,
         validators: [],
         options: [
           category.createOptionItem({
-            metadata: {},
             label: 'option3',
             insertionFields: [
               category.createField('ParagraphField', {
-                metadata: {},
                 name: 'field7',
                 description: null,
                 isRequired: true,

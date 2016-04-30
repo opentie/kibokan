@@ -1,6 +1,6 @@
 'use strict';
 
-const NamedObjectMap = require('./named_object_map');
+const NamedObjectMap = require('../named_object_map');
 
 const Operators = new NamedObjectMap();
 

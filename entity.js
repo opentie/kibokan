@@ -59,5 +59,6 @@ Entity.property('document', identical);
 Entity.reference('category', Category);
 Entity.primaryKey = '_id';
 Entity.property('_id', identical, true);
+Entity.property('metadata', identical);
 
 module.exports = Entity;

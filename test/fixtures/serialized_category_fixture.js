@@ -13,14 +13,13 @@ function generate() {
         name: 'form1',
         deadline: null,
         release: null,
-        attachable: {},
+        attachable: { _version: 0, operators: [] },
         is_required: true,
         fields: [
           {
             _class: 'TextField',
             _properties: {
               _version: 0,
-              metadata: {},
               name: 'field1',
               description: null,
               is_required: true,
@@ -29,7 +28,6 @@ function generate() {
                   _class: 'MaxlengthValidator',
                   _properties: {
                     _version: 0,
-                    metadata: {},
                     threshold: 10
                   },
                 }
@@ -40,7 +38,6 @@ function generate() {
             _class: 'RadioField',
             _properties: {
               _version: 0,
-              metadata: {},
               name: 'field2',
               description: null,
               is_required: true,
@@ -48,14 +45,12 @@ function generate() {
               options: [
                 {
                   _version: 0,
-                  metadata: {},
                   label: 'option1',
                   insertion_fields: [
                     {
                       _class: 'ParagraphField',
                       _properties: {
                         _version: 0,
-                        metadata: {},
                         name: 'field3',
                         description: null,
                         is_required: true,
@@ -76,14 +71,13 @@ function generate() {
         name: 'form2',
         deadline: null,
         release: null,
-        attachable: {},
+        attachable: { _version: 0, operators: [] },
         is_required: true,
         fields: [
           {
             _class: 'RadioField',
             _properties: {
               _version: 0,
-              metadata: {},
               name: 'field4',
               description: null,
               is_required: true,
@@ -91,14 +85,12 @@ function generate() {
               options: [
                 {
                   _version: 0,
-                  metadata: {},
                   label: 'option2',
                   insertion_fields: [
                     {
                       _class: 'ParagraphField',
                       _properties: {
                         _version: 0,
-                        metadata: {},
                         name: 'field5',
                         description: null,
                         is_required: true,
@@ -119,14 +111,34 @@ function generate() {
         name: 'form3',
         deadline: null,
         release: null,
-        attachable: { 'form1.field1': 'hey' },
+        attachable: {
+          _version: 0,
+          operators: [
+            {
+              _version: 0,
+              operators: [
+                {
+                  _version: 0,
+                  form: 'form1',
+                  field: 'field1',
+                  value: {
+                    _class: 'LiteralValueOperator',
+                    _properties: {
+                      _version: 0,
+                      value: 'hey'
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
         is_required: false,
         fields: [
           {
             _class: 'RadioField',
             _properties: {
               _version: 0,
-              metadata: {},
               name: 'field6',
               description: null,
               is_required: true,
@@ -134,14 +146,12 @@ function generate() {
               options: [
                 {
                   _version: 0,
-                  metadata: {},
                   label: 'option3',
                   insertion_fields: [
                     {
                       _class: 'ParagraphField',
                       _properties: {
                         _version: 0,
-                        metadata: {},
                         name: 'field7',
                         description: null,
                         is_required: true,

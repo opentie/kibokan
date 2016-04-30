@@ -3,8 +3,9 @@
 const { compileDocumentSelector } = require('minimongo/src/selector');
 
 const Serializable = require('./serializable');
-const { arrayOf, identical, polymorphic, categorized } = require('./mappers');
+const { arrayOf, identical, polymorphic, categorized, instanceOf } = require('./mappers');
 const NamedObjectMap = require('./named_object_map');
+const OrOperator = require('./operators/or_operator');
 
 const Fields = require('./fields');
 
@@ -32,7 +33,7 @@ class Form extends Serializable {
   get attachableSelector() {
     return this.compiledAttachableSelector ||
       (this.compiledAttachableSelector =
-       compileDocumentSelector(this.attachable));
+       compileDocumentSelector(this.attachable.mongoize()));
   }
 
   set attachable(attachable) {
@@ -48,7 +49,8 @@ Form.property('name', identical);
 Form.property('fields', arrayOf(polymorphic(categorized, Fields)));
 Form.property('release', identical);
 Form.property('deadline', identical);
-Form.property('attachable', identical);
+Form.property('attachable', instanceOf(OrOperator));
 Form.property('isRequired', identical);
+Form.property('metadata', identical);
 
 module.exports = Form;
