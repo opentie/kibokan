@@ -41,7 +41,7 @@ class Serializable {
     /* eslint-disable guard-for-in */
 
     for (const key in properties) {
-      const { mapper, serializedKey, isSafe } = properties[key];
+      const { mapper, serializedKey } = properties[key];
 
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
         this[key] = mapper.deserialize.call(this, obj[serializedKey]);
@@ -69,7 +69,7 @@ class Serializable {
     return this;
   }
 
-  serialize(embeds = {}, excludePrimaryKey = false) {
+  serialize(embeds = {}) {
     const { properties, references, version } = this.constructor;
 
     const obj = {
@@ -80,10 +80,11 @@ class Serializable {
 
     for (const key in properties) {
       const { mapper, serializedKey, weak } = properties[key];
-      if (!(excludePrimaryKey && key === this.constructor.primaryKey)) {
-        assert(key in this, `missing property: ${key}`);
+      if (key in this) {
         obj[serializedKey] =
           mapper.serialize.call(this, this[key], embeds[key]);
+      } else {
+        assert(key === this.constructor.primaryKey, `missing property: ${key}`);
       }
     }
 
