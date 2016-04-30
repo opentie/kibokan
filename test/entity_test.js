@@ -23,7 +23,7 @@ describe('Entity', () => {
     );
 
     assert.deepEqual(
-      entity.update({
+      entity.updateDocument({
         form1: {
           field1: 'hey',
           field2: 'option1',
@@ -47,7 +47,7 @@ describe('Entity', () => {
     );
 
     assert.deepEqual(
-      entity.update({
+      entity.updateDocument({
         form1: {
           field1: 'hey',
           field2: 'option1',
@@ -62,7 +62,7 @@ describe('Entity', () => {
     );
 
     assert.deepEqual(
-      entity.update({
+      entity.updateDocument({
         form1: {
           field1: 'boo',
           field2: 'option1',
