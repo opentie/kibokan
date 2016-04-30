@@ -121,6 +121,7 @@ class Serializable {
     return true;
   }
 
+  // TODO: use resolveReferece
   resolveReferences() {
     const { references } = this.constructor;
     const promises = [];
@@ -142,6 +143,19 @@ class Serializable {
     /* eslint-enable guard-for-in */
 
     return Promise.all(promises);
+  }
+
+  resolveReference(referenceProperty, adhocResolver) {
+    const { references } = this.constructor;
+    assert(referenceProperty in references,
+           `no such reference property: ${referenceProperty}`);
+    const { Class, suffixedKey } = references[referenceProperty];
+    const resolve = adhocResolver || Class.resolve.bind(Class);
+    return resolve(this[suffixedKey]).then(resolved => {
+      this[referenceProperty] = resolved;
+
+      return resolved;
+    });
   }
 
   static resolve() {
