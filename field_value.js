@@ -18,7 +18,8 @@ class FieldValue {
       };
     });
     this.insertionFields = this.field.retrieveInsertionFields(this.value);
-    this.isValid = !this.isMissing && this.validities.every(id);
+    this.isValid = !this.isMissing &&
+      this.validities.every(({validity}) => validity);
 
     Object.freeze(this);
   }
