@@ -44,7 +44,7 @@ class Serializable {
       const { mapper, serializedKey } = properties[key];
 
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
-        this[key] = mapper.deserialize.call(this, obj[serializedKey]);
+        this[key] = mapper.deserialize.call(this, obj[serializedKey], isPartial);
       } else {
         assert(isPartial || this.constructor.primaryKey === key,
                `missing property: ${serializedKey} in ${JSON.stringify(obj)}`);
@@ -82,7 +82,7 @@ class Serializable {
       const { mapper, serializedKey, weak } = properties[key];
       if (key in this) {
         obj[serializedKey] =
-          mapper.serialize.call(this, this[key], embeds[key]);
+          mapper.serialize.call(this, this[key], embeds[key], isPartial);
       } else {
         assert(isPartial || key === this.constructor.primaryKey,
                `missing property: ${key}`);

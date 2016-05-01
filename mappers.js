@@ -13,66 +13,70 @@ const idMapper = {
 
 function createCategorizedInstanceMapper(CategorizedClass) {
   return {
-    serialize: function serializeCategorizedInstance(instance, embeds) {
+    serialize:
+    function serializeCategorizedInstance(instance, embeds, isPartial) {
       assert(instance instanceof CategorizedClass);
 
-      return instance.serialize(embeds);
+      return instance.serialize(embeds, isPartial);
     },
-    deserialize: function deserializeInstance(properties) {
+    deserialize: function deserializeInstance(properties, isPartial) {
       const instance = new CategorizedClass();
       instance.category = this.category;
 
-      return instance.deserialize(properties);
+      return instance.deserialize(properties, isPartial);
     }
   };
 }
 
 function createInstanceMapper(Class) {
   return {
-    serialize: function serializeInstance(instance, embeds) {
+    serialize: function serializeInstance(instance, embeds, isPartial) {
       assert(instance instanceof Class);
 
-      return instance.serialize(embeds);
+      return instance.serialize(embeds, isPartial);
     },
-    deserialize: function deserializeInstance(properties) {
+    deserialize: function deserializeInstance(properties, isPartial) {
       const instance = new Class();
 
-      return instance.deserialize(properties);
+      return instance.deserialize(properties, isPartial);
     }
   };
 };
 
 function createArrayMapper(itemMapper) {
   return {
-    serialize: function serializeArray(array, embeds) {
+    serialize: function serializeArray(array, embeds, isPartial) {
       assert(Array.isArray(array));
 
-      return array.map(item => itemMapper.serialize.call(this, item, embeds));
+      return array
+        .map(item => itemMapper.serialize.call(this, item, embeds, isPartial));
     },
-    deserialize: function deserializeArray(array) {
-      return array.map(itemMapper.deserialize.bind(this));
+    deserialize: function deserializeArray(array, isPartial) {
+      return array
+        .map(item => itemMapper.deserialize.call(this, item, isPartial));
     }
   };
 };
 
 function createPolymorphicMapper(instanceMapper, mapping) {
   return {
-    serialize: function serializePolymorphic(instance, embeds) {
+    serialize: function serializePolymorphic(instance, embeds, isPartial) {
       const Class = instance.constructor;
 
       const serialized = instanceMapper(Class).
-              serialize.call(this, instance, embeds);
+              serialize.call(this, instance, embeds, isPartial);
 
       return {
         _class: Class.name,
         _properties: serialized,
       };
     },
-    deserialize: function deserializePolymorphic({ _class, _properties }) {
+    deserialize:
+    function deserializePolymorphic({ _class, _properties }, isPartial) {
       assert(mapping.has(_class));
       const Class = mapping.get(_class);
 
-      return instanceMapper(Class).deserialize.call(this, _properties);
+      return instanceMapper(Class).deserialize.call(this, _properties, isPartial);
     }
   };
 };
