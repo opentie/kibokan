@@ -51,6 +51,7 @@ Form.property('release', identical);
 Form.property('deadline', identical);
 Form.property('attachable', instanceOf(OrOperator));
 Form.property('isRequired', identical);
+Form.property('isProtected', identical);
 Form.property('metadata', identical);
 
 module.exports = Form;

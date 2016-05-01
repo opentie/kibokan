@@ -22,6 +22,7 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: true,
+    isProtected: false,
     attachable: Object.assign(new OrOperator(), { operators: [] }),
     fields: [
       field1 = category.createField('TextField', {
@@ -63,6 +64,7 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: true,
+    isProtected: false,
     attachable: Object.assign(new OrOperator(), { operators: [] }),
     fields: [
       category.createField('RadioField', {
@@ -94,6 +96,7 @@ function generate() {
     deadline: null,
     release: null,
     isRequired: false,
+    isProtected: false,
     attachable: Object.assign(new OrOperator(), {
       operators: [
         Object.assign(new AndOperator(), {

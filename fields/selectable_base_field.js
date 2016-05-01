@@ -4,7 +4,7 @@ const assert = require('assert');
 
 const NamedObjectMap = require('../named_object_map');
 
-const { arrayOf, instanceOf } = require('../mappers');
+const { arrayOf, categorized } = require('../mappers');
 
 const OptionItem = require('../option_item');
 
@@ -45,6 +45,6 @@ class SelectableBaseField extends BaseField {
     return Array.prototype.concat.apply([], fields);
   }
 }
-SelectableBaseField.property('options', arrayOf(instanceOf(OptionItem)));
+SelectableBaseField.property('options', arrayOf(categorized(OptionItem)));
 
 module.exports = SelectableBaseField;

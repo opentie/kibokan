@@ -15,6 +15,7 @@ function generate() {
         release: null,
         attachable: { _version: 0, operators: [] },
         is_required: true,
+        is_protected: false,
         fields: [
           {
             _class: 'TextField',
@@ -73,6 +74,7 @@ function generate() {
         release: null,
         attachable: { _version: 0, operators: [] },
         is_required: true,
+        is_protected: false,
         fields: [
           {
             _class: 'RadioField',
@@ -134,6 +136,7 @@ function generate() {
           ]
         },
         is_required: false,
+        is_protected: false,
         fields: [
           {
             _class: 'RadioField',

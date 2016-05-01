@@ -236,30 +236,6 @@ forms:
       - _class: RadioField
         _properties:
           _version: 0
-          name: "希望実施エリア"
-          description: 'TODO'
-          is_required: true
-          validators: []
-          options:
-            - _version: 0
-              label: "エリア未確定"
-              insertion_fields: []
-              deadline: null
-            - _version: 0
-              label: "第一エリア"
-              insertion_fields: []
-              deadline: null
-            - _version: 0
-              label: "第二・第三エリア"
-              insertion_fields: []
-              deadline: null
-            - _version: 0
-              label: "大芸エリア"
-              insertion_fields: []
-              deadline: null
-      - _class: RadioField
-        _properties:
-          _version: 0
           name: "雙峰祭一日目への参加希望"
           description: 'TODO'
           is_required: true

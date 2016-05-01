@@ -3,7 +3,8 @@
 'use strict';
 
 const assert = require('assert');
-
+const fs = require('fs');
+const yaml = require('js-yaml');
 const categoryFixture = require('./fixtures/category_fixture');
 const serializedCategoryFixture =
         require('./fixtures/serialized_category_fixture');
@@ -40,6 +41,12 @@ describe('Category', () => {
     assert(category.name === 'test');
     assert(category.forms.length === 3);
     assert(category.forms[0].name === 'form1');
+  });
+
+  it('should deserialize and serialize', () => {
+    const s = yaml.safeLoad(fs.readFileSync('./test/fixtures/category.yml'));
+    const s2 = new Category().deserialize(s).serialize();
+    assert.deepEqual(s, s2);
   });
 });
 
