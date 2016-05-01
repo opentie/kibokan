@@ -69,7 +69,7 @@ class Serializable {
     return this;
   }
 
-  serialize(embeds = {}) {
+  serialize(embeds = {}, isPartial = false) {
     const { properties, references, version } = this.constructor;
 
     const obj = {
@@ -84,7 +84,8 @@ class Serializable {
         obj[serializedKey] =
           mapper.serialize.call(this, this[key], embeds[key]);
       } else {
-        assert(key === this.constructor.primaryKey, `missing property: ${key}`);
+        assert(isPartial || key === this.constructor.primaryKey,
+               `missing property: ${key}`);
       }
     }
 

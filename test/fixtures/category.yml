@@ -1,6 +1,7 @@
 _version: 0
 name: "企画"
 namespace: "groups"
+autoincrement: 0
 metadata:
   screen_name:
     field: '企画基本情報'

@@ -80,6 +80,7 @@ describe('Entity', () => {
   it('should be serizlized', () => {
     const { category, form1, form3 } = categoryFixture();
     const entity = new Entity();
+    entity.number = 1;
     entity._id = '1';
     entity.category = category;
     entity.document = {};
@@ -88,6 +89,7 @@ describe('Entity', () => {
     assert.deepEqual(entity.serialize(), {
       _id: 1,
       _version: 0,
+      number: 1,
       metadata: {},
       category_name: 'test',
       document: {}
@@ -96,6 +98,7 @@ describe('Entity', () => {
     assert.deepEqual(entity.serialize({ category: {} }), {
       _id: 1,
       _version: 0,
+      number: 1,
       metadata: {},
       category: category.serialize(),
       document: {}
@@ -104,6 +107,7 @@ describe('Entity', () => {
     assert.deepEqual(entity.serialize({}), {
       _id: 1,
       _version: 0,
+      number: 1,
       metadata: {},
       category_name: 'test',
       document: {}
@@ -113,6 +117,7 @@ describe('Entity', () => {
   it('should be deserialized', () => {
     const { category, form1, form3 } = categoryFixture();
     const entity = new Entity();
+    entity.number = 1;
     entity._id = 1;
     entity.category = category;
     entity.document = {};

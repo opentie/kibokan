@@ -55,10 +55,11 @@ class Entity extends Serializable {
     return this.updateDocument(document);
   }
 }
+Entity.primaryKey = '_id';
 Entity.property('document', identical);
 Entity.reference('category', Category);
-Entity.primaryKey = '_id';
-Entity.property('_id', identical, true);
+Entity.property('_id', identical);
+Entity.property('number', identical);
 Entity.property('metadata', identical);
 
 module.exports = Entity;

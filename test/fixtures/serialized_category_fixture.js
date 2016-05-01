@@ -3,6 +3,7 @@
 function generate() {
   return {
     _version: 0,
+    autoincrement: 0,
     metadata: {},
     namespace: 'ns',
     name: 'test',

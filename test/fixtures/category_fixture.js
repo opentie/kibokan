@@ -9,6 +9,7 @@ function generate() {
   category.name = 'test';
   category.namespace = 'ns';
   category.metadata = {};
+  category.autoincrement = 0;
 
   /* eslint-disable init-declarations */
 
