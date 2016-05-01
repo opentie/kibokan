@@ -59,7 +59,9 @@ class Serializable {
       if (Object.hasOwnProperty.call(obj, serializedKey)) {
         this[key] = new Class().deserialize(obj[serializedKey]);
       } else if (!isPartial) {
-        assert(Object.hasOwnProperty.call(obj, serializedSuffixedKey));
+        assert(
+          Object.hasOwnProperty.call(obj, serializedSuffixedKey),
+          `no such key: ${serializedSuffixedKey} in ${JSON.stringify(obj)}`);
         this[suffixedKey] = obj[serializedSuffixedKey];
       }
     }
