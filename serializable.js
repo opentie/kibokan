@@ -36,7 +36,7 @@ class Serializable {
     const { properties, references, version } = this.constructor;
 
     assert(obj._version === version,
-           `incompatible version: ${obj._version} to ${version}`);
+           `incompatible version: ${obj._version} to ${version} in ${JSON.stringify(obj)}`);
 
     /* eslint-disable guard-for-in */
 
@@ -47,7 +47,7 @@ class Serializable {
         this[key] = mapper.deserialize.call(this, obj[serializedKey]);
       } else {
         assert(isPartial || this.constructor.primaryKey === key,
-               `missing property: ${serializedKey}`);
+               `missing property: ${serializedKey} in ${JSON.stringify(obj)}`);
       }
     }
 
