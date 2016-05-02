@@ -12,10 +12,12 @@ const SelectableBaseField = require('./selectable_base_field');
 const TextField = require('./text_field');
 const ParagraphField = require('./paragraph_field');
 const RadioField = require('./radio_field');
+const SelectField = require('./select_field');
 
 Fields.add(TextField);
 Fields.add(ParagraphField);
 Fields.add(RadioField);
+Fields.add(SelectField);
 
 Object.assign(Fields, {
   BaseField,
@@ -25,4 +27,5 @@ Object.assign(Fields, {
   TextField,
   ParagraphField,
   RadioField,
+  SelectField,
 });
