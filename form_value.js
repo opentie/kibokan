@@ -9,11 +9,20 @@ class FormValue {
     this.form = form;
 
     this.fieldValues = new NamedObjectMap();
-    for (const field of this.form.fields) {
-      this.constructFieldValues(value, field);
+    if (value === true) {
+      this.isValid = true;
+      this.state = 'Rejected';
+    } else if (value === false) {
+      this.isValid = false;
+      this.state = 'NotAttached';
+    } else {
+      this.state = 'Filled';
+      for (const field of this.form.fields) {
+        this.constructFieldValues(value, field);
+      }
+      this.isValid = [...this.fieldValues.values()].
+        every(fieldValue => fieldValue.isValid);
     }
-    this.isValid = [...this.fieldValues.values()].
-      every(fieldValue => fieldValue.isValid);
 
     Object.freeze(this);
   }

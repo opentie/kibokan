@@ -10,6 +10,14 @@ const Category = require('./category');
 const FormValue = require('./form_value');
 
 class Entity extends Serializable {
+  get formValuesMap() {
+    return NamedObjectMap.fromArray(
+      [...this.trieveAttachableFormsMap().values()].map((form) => {
+        return new FormValue(form, this.document[form.name] || false);
+      })
+    );
+  }
+
   retrieveAttachableFormsMap(onlyMissing = false) {
     return NamedObjectMap.fromArray(this.category.forms.filter(form => {
       if (onlyMissing && Object.hasOwnProperty.call(this.document, form.name)) {

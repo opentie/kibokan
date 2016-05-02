@@ -16,6 +16,7 @@ const MinvalueValidator = require('./minvalue_validator');
 const ListValidator = require('./list_validator');
 const MaxitemsValidator = require('./maxitems_validator');
 const MinitemsValidator = require('./minitems_validator');
+const HiraganaValidator = require('./hiragana_validator');
 
 Validators.add(MaxlengthValidator);
 Validators.add(MinlengthValidator);
@@ -24,6 +25,7 @@ Validators.add(MaxvalueValidator);
 Validators.add(MinvalueValidator);
 Validators.add(MaxitemsValidator);
 Validators.add(MinitemsValidator);
+Validators.add(HiraganaValidator);
 
 Object.assign(Validators, {
   BaseValidator,
@@ -32,6 +34,7 @@ Object.assign(Validators, {
 
   MaxlengthValidator,
   MinlengthValidator,
+  HiraganaValidator,
   NumericValidator,
   MaxvalueValidator,
   MinvalueValidator,
