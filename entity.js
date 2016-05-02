@@ -12,7 +12,7 @@ const FormValue = require('./form_value');
 class Entity extends Serializable {
   get formValuesMap() {
     return NamedObjectMap.fromArray(
-      [...this.trieveAttachableFormsMap().values()].map((form) => {
+      [...this.retrieveAttachableFormsMap().values()].map((form) => {
         return new FormValue(form, this.document[form.name] || false);
       })
     );
