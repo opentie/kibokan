@@ -12,6 +12,9 @@ class FormValue {
     if (value === true) {
       this.isValid = true;
       this.state = 'Rejected';
+      for (const field of this.form.fields) {
+        this.constructFieldValues({}, field);
+      }
     } else if (value === false) {
       this.isValid = false;
       this.state = 'NotAttached';
