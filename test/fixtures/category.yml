@@ -4,8 +4,8 @@ namespace: "groups"
 autoincrement: 0
 metadata:
   screen_name:
-    field: '企画基本情報'
-    form: '企画名'
+    form: '企画基本情報'
+    field: '企画名'
 forms:
   - _version: 0
     name: "企画基本情報"
@@ -192,7 +192,17 @@ forms:
     release: null
     attachable:
       _version: 0
-      operators: []
+      operators:
+        - _version: 0
+          operators:
+            - _version: 0
+              form: "企画基本情報"
+              field: "企画実施場所"
+              value:
+                _class: LiteralValueOperator
+                _properties:
+                  _version: 0
+                  value: "屋外"
     fields:
       - _class: RadioField
         _properties:
