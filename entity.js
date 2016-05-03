@@ -36,6 +36,7 @@ class Entity extends Serializable {
       if (Object.hasOwnProperty.call(document, form.name)) {
         const formValue = new FormValue(form, document[form.name]);
         if (!formValue.isValid) {
+          console.error(formValue);
           throw new Error('invalid form value');
         }
         this.document[form.name] = formValue.value;

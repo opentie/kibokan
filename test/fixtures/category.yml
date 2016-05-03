@@ -457,3 +457,22 @@ forms:
               label: "使用する"
               insertion_fields: []
               deadline: null
+  - _version: 0
+    name: "一次宣伝希望申請"
+    metadata:
+    is_protected: false
+    is_required: false
+    deadline: null
+    release: null
+    attachable:
+      _version: 0
+      operators: []
+    fields:
+      - _class: ParagraphField
+        _properties:
+          _version: 0
+          name: "特記事項"
+          description: |
+            特記事項があればご記入ください。
+          is_required: false
+          validators: []

@@ -44,6 +44,12 @@ class FormValue {
   }
 
   get value() {
+    if (this.state === 'NotAttached') {
+      return null;
+    } else if (this.state === 'Rejected') {
+      return true;
+    }
+
     const value = {};
     for (const fieldValue of this.fieldValues.values()) {
       value[fieldValue.name] = fieldValue.value;
