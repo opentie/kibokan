@@ -12,7 +12,7 @@ class OrOperator extends BaseOperator {
     }
 
     return {
-      $and: this.operators.map(op => op.mongoize())
+      $or: this.operators.map(op => op.mongoize())
     };
   }
 }
