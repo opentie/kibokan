@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "humps": "^1.1.0",
-    "koa-body": "^1.4.0",
     "minimongo": "^3.8.2"
   },
   "devDependencies": {
