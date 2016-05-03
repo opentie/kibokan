@@ -4,12 +4,14 @@ namespace: "groups"
 autoincrement: 0
 metadata:
   screen_name:
-    form: '企画基本情報'
+    form: '企画基本情報登録'
     field: '企画名'
 forms:
   - _version: 0
-    name: "企画基本情報"
+    name: "企画基本情報登録"
     metadata:
+      description: |
+        TODO
     is_protected: true
     is_required: true
     deadline: null
@@ -37,7 +39,10 @@ forms:
           description: |
             企画名のふりがなを入力してください
           is_required: true
-          validators: []
+          validators:
+            - _class: HiraganaValidator
+              _properties:
+                _version: 0
       - _class: TextField
         _properties:
           _version: 0
@@ -45,7 +50,11 @@ forms:
           description: |
             企画を主催する団体名を入力してください
           is_required: true
-          validators: []
+          validators:
+            - _class: MaxlengthValidator
+              _properties:
+                _version: 0
+                threshold: 20
       - _class: TextField
         _properties:
           _version: 0
@@ -53,7 +62,10 @@ forms:
           description: |
             企画団体名のふりがなを入力してください
           is_required: true
-          validators: []
+          validators:
+            - _class: HiraganaValidator
+              _properties:
+                _version: 0
       - _class: ParagraphField
         _properties:
           _version: 0
@@ -65,34 +77,92 @@ forms:
       - _class: RadioField
         _properties:
           _version: 0
-          name: "企画実施場所"
+          name: "ゲストの参加の有無"
           description: |
-            企画を実施する場所を選択してください。
-            (希望数に応じて後ほど変更をお願いする場合があります)
+            学実委では、学園祭における「ゲスト」を以下のように定義します。
+
+            > 筑波大学の学生・教職員以外で、企画の運営に携わる個人・団体
+
+            本学の学生・教職員以外の方は講演会やステージに出演することは可能ですが、調理や物品販売、金銭授受等を行うことはできません。また、ゲストのみで企画を運営することはできません。ゲストを呼ぶ場合は、「ゲスト有り」を選択してください。
           is_required: true
           validators: []
           options:
             - _version: 0
-              label: "屋内(会館以外)"
+              label: "ゲスト無し"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "会館屋内"
+              label: "ゲスト有り"
+              insertion_fields: []
+              deadline: null
+      - _class: RadioField
+        _properties:
+          _version: 0
+          name: "金銭授受の有無"
+          description: |
+            金銭授受の有無を選択してください。
+          is_required: true
+          validators: []
+          options:
+            - _version: 0
+              label: "金銭授受無し"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "屋外"
+              label: "金銭授受有り"
               insertion_fields: []
               deadline: null
+      - _class: RadioField
+        _properties:
+          _version: 0
+          name: "参加区分"
+          description: "[参加区分について](http://www.sohosai.tsukuba.ac.jp/2016/guidelines-for-application/16_normal.html#4)"
+          is_required: true
+          validators: []
+          options:
             - _version: 0
-              label: "ステージ"
+              label: "一般企画"
+              deadline: null
+              insertion_fields:
+                - _class: RadioField
+                  _properties:
+                    _version: 0
+                    name: "企画実施場所"
+                    description: |
+                      企画を実施する場所を選択してください。
+                    is_required: true
+                    validators: []
+                    options:
+                      - _version: 0
+                        label: "屋内(会館以外)"
+                        insertion_fields: []
+                        deadline: null
+                      - _version: 0
+                        label: "会館屋内"
+                        insertion_fields: []
+                        deadline: null
+                      - _version: 0
+                        label: "屋外"
+                        insertion_fields: []
+                        deadline: null
+            - _version: 0
+              label: "ステージ企画"
               insertion_fields: []
               deadline: null
+      - _class: ParagraphField
+        _properties:
+          _version: 0
+          name: "特記事項"
+          description: |
+            特記事項があればご記入ください。
+          is_required: false
+          validators: []
 
   - _version: 0
-    name: "屋内企画基本情報"
+    name: "屋内実施企画希望参加日程申請"
     metadata:
-    is_protected: true
+      description: ""
+    is_protected: false
     is_required: true
     deadline: null
     release: null
@@ -103,6 +173,70 @@ forms:
           operators:
             - _version: 0
               form: "企画基本情報"
+              field: "企画実施場所"
+              value:
+                _class: LiteralValueOperator
+                _properties:
+                  _version: 0
+                  value: "屋内(会館以外)"
+        - _version: 0
+          operators:
+            - _version: 0
+              form: "企画基本情報登録"
+              field: "企画実施場所"
+              value:
+                _class: LiteralValueOperator
+                _properties:
+                  _version: 0
+                  value: "会館屋内"
+    fields:
+      - _class: RadioField
+        _properties:
+          _version: 0
+          name: "雙峰祭一日目への参加希望"
+          description: 'TODO'
+          is_required: true
+          validators: []
+          options:
+            - _version: 0
+              label: "希望しない"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "希望する"
+              insertion_fields: []
+              deadline: null
+      - _class: RadioField
+        _properties:
+          _version: 0
+          name: "雙峰祭二日目への参加希望"
+          description: 'TODO'
+          is_required: true
+          validators: []
+          options:
+            - _version: 0
+              label: "希望しない"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "希望する"
+              insertion_fields: []
+              deadline: null
+
+  - _version: 0
+    name: "屋内企画基本情報申請"
+    metadata:
+    is_protected: false
+    is_required: true
+    deadline: null
+    release: null
+    attachable:
+      _version: 0
+      operators:
+        - _version: 0
+          operators:
+            - _version: 0
+              form: "企画基本情報登録"
               field: "企画実施場所"
               value:
                 _class: LiteralValueOperator
@@ -124,69 +258,84 @@ forms:
               deadline: null
             - _version: 0
               label: "第一エリア"
-              insertion_fields: []
               deadline: null
+              insertion_fields: []
             - _version: 0
               label: "第二・第三エリア"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "大芸エリア"
+              label: "体芸エリア"
               insertion_fields: []
               deadline: null
-      - _class: RadioField
+      - _class: SelectField
         _properties:
           _version: 0
-          name: "雙峰祭一日目への参加希望"
+          name: "希望教室規模"
           description: 'TODO'
           is_required: true
           validators: []
           options:
             - _version: 0
-              label: "希望する"
+              label: "20人以下規模"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "希望しない"
+              label: "20〜30人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "30〜40人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "40〜50人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "50〜60人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "60〜70人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "70〜80人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "80〜90人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "90〜100人規模"
+              insertion_fields: []
+              deadline: null
+            - _version: 0
+              label: "100人以上規模"
               insertion_fields: []
               deadline: null
       - _class: RadioField
         _properties:
           _version: 0
-          name: "雙峰祭二日目への参加希望"
+          name: "固定教室利用"
           description: 'TODO'
           is_required: true
           validators: []
           options:
             - _version: 0
-              label: "希望する"
+              label: "不可"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "希望しない"
+              label: "可"
               insertion_fields: []
               deadline: null
-      - _class: RadioField
-        _properties:
-          _version: 0
-          name: "大音量の使用"
-          description: 'TODO'
-          is_required: true
-          validators: []
-          options:
-            - _version: 0
-              label: "希望する"
-              insertion_fields: []
-              deadline: null
-            - _version: 0
-              label: "希望しない"
-              insertion_fields: []
-              deadline: null
-
   - _version: 0
-    name: "屋外企画基本情報"
+    name: "屋外実施企画基本情報申請"
     metadata:
-    is_protected: true
+    is_protected: false
     is_required: true
     deadline: null
     release: null
@@ -196,7 +345,7 @@ forms:
         - _version: 0
           operators:
             - _version: 0
-              form: "企画基本情報"
+              form: "企画基本情報登録"
               field: "企画実施場所"
               value:
                 _class: LiteralValueOperator
@@ -218,8 +367,24 @@ forms:
               deadline: null
             - _version: 0
               label: "第一エリア"
-              insertion_fields: []
               deadline: null
+              insertion_fields:
+                - _class: RadioField
+                  _properties:
+                    _version: 0
+                    name: "第一エリアサブエリア"
+                    description: 'TODO'
+                    is_required: true
+                    validators: []
+                    options:
+                      - _version: 0
+                        label: "1C棟周辺エリア"
+                        insertion_fields: []
+                        deadline: null
+                      - _version: 0
+                        label: "松美池周辺エリア"
+                        insertion_fields: []
+                        deadline: null
             - _version: 0
               label: "第二・第三エリア"
               deadline: null
@@ -233,15 +398,15 @@ forms:
                     validators: []
                     options:
                       - _version: 0
-                        label: "希望する"
-                        insertion_fields: []
-                        deadline: null
-                      - _version: 0
                         label: "希望しない"
                         insertion_fields: []
                         deadline: null
+                      - _version: 0
+                        label: "希望する"
+                        insertion_fields: []
+                        deadline: null
             - _version: 0
-              label: "大芸エリア"
+              label: "体芸エリア"
               insertion_fields: []
               deadline: null
       - _class: RadioField
@@ -253,11 +418,11 @@ forms:
           validators: []
           options:
             - _version: 0
-              label: "希望する"
+              label: "希望しない"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "希望しない"
+              label: "希望する"
               insertion_fields: []
               deadline: null
       - _class: RadioField
@@ -269,26 +434,26 @@ forms:
           validators: []
           options:
             - _version: 0
-              label: "希望する"
+              label: "希望しない"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "希望しない"
+              label: "希望する"
               insertion_fields: []
               deadline: null
       - _class: RadioField
         _properties:
           _version: 0
-          name: "大音量の使用"
+          name: "火気使用の有無"
           description: 'TODO'
           is_required: true
           validators: []
           options:
             - _version: 0
-              label: "希望する"
+              label: "使用しない"
               insertion_fields: []
               deadline: null
             - _version: 0
-              label: "希望しない"
+              label: "使用する"
               insertion_fields: []
               deadline: null

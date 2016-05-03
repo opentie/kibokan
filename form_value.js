@@ -15,6 +15,9 @@ class FormValue {
     } else if (value === false) {
       this.isValid = false;
       this.state = 'NotAttached';
+      for (const field of this.form.fields) {
+        this.constructFieldValues({}, field);
+      }
     } else {
       this.state = 'Filled';
       for (const field of this.form.fields) {
