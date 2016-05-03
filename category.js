@@ -36,10 +36,6 @@ class Category extends Serializable {
   createForm(props) {
     return Object.assign(new Form(), props, {
       category: this,
-      isProtected: false,
-      isRequired: true,
-      deadline: null,
-      release: null,
     });
   }
 
