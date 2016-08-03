@@ -64,6 +64,36 @@ function generate() {
                 }
               ]
             }
+          },
+          {
+            _class: 'TableField',
+            _properties: {
+              _version: 0,
+              name: 'table1',
+              description: null,
+              is_required: false,
+              validators: [],
+              columns: [
+                {
+                  _class: 'TextField',
+                  _properties: {
+                    _version: 0,
+                    name: 'column1',
+                    description: null,
+                    is_required: true,
+                    validators: [
+                      {
+                        _class: 'MaxlengthValidator',
+                        _properties: {
+                          _version: 0,
+                          threshold: 10
+                        },
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
         ]
       },

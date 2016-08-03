@@ -15,14 +15,14 @@ describe('Category', () => {
     const {
       category,
       form1, form2, form3,
-      field1, field2, field3,
+      field1, field2, field3, table1,
     } = categoryFixture();
 
     assert(category.getFormByName('form1') === form1);
 
     assert.deepEqual(
       form1.retrieveAllPossibleFields(),
-      [ field1, field2, field3 ]
+      [ field1, field2, field3, table1 ]
     );
   });
 

@@ -2,8 +2,6 @@
 
 const NamedObjectMap = require('./named_object_map');
 
-const FieldValue = require('./field_value');
-
 class FormValue {
   constructor(form, value) {
     this.form = form;
@@ -34,7 +32,7 @@ class FormValue {
   }
 
   constructFieldValues(rawValue, field) {
-    const fieldValue = new FieldValue(field, rawValue[field.name]);
+    const fieldValue = field.constructValue(rawValue[field.name]);
     this.fieldValues.add(fieldValue);
 
     fieldValue.insertionFields.

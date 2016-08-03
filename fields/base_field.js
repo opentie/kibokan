@@ -5,6 +5,8 @@ const { arrayOf, identical, polymorphic, categorized } = require('../mappers');
 
 const Validators = require('../validators');
 
+const FieldValue = require('../field_value');
+
 class BaseField extends Serializable {
   get sanitizer() {
     throw new Error('not implemented');
@@ -16,6 +18,10 @@ class BaseField extends Serializable {
 
   retrievePossibleInsertionFields() {
     return [];
+  }
+
+  constructValue(rawValue) {
+    return new FieldValue(this, rawValue);
   }
 }
 BaseField.property('name', identical);

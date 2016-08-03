@@ -21,7 +21,9 @@ class FieldValue {
     this.isValid = !this.isMissing &&
       this.validities.every(({validity}) => validity);
 
-    Object.freeze(this);
+    if (this.constructor === FieldValue) {
+      Object.freeze(this);
+    }
   }
 
   get name() {

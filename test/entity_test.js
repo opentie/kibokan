@@ -28,6 +28,11 @@ describe('Entity', () => {
           field1: 'hey',
           field2: 'option1',
           field3: 'foobar',
+          table1: [
+            { column1: 'heyyo' },
+            {},
+            { useless: 1, column1: 'ok' }
+          ]
         }
       }),
       [ form1 ]
@@ -38,6 +43,10 @@ describe('Entity', () => {
         field1: 'hey',
         field2: 'option1',
         field3: 'foobar',
+        table1: [
+          { column1: 'heyyo' },
+          { column1: 'ok' }
+        ]
       }
     });
 

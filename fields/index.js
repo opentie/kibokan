@@ -9,15 +9,18 @@ module.exports = Fields;
 const BaseField = require('./base_field');
 const StringBaseField = require('./string_base_field');
 const SelectableBaseField = require('./selectable_base_field');
+
 const TextField = require('./text_field');
 const ParagraphField = require('./paragraph_field');
 const RadioField = require('./radio_field');
 const SelectField = require('./select_field');
+const TableField = require('./table_field');
 
 Fields.add(TextField);
 Fields.add(ParagraphField);
 Fields.add(RadioField);
 Fields.add(SelectField);
+Fields.add(TableField);
 
 Object.assign(Fields, {
   BaseField,
@@ -28,4 +31,5 @@ Object.assign(Fields, {
   ParagraphField,
   RadioField,
   SelectField,
+  TableField,
 });

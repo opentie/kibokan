@@ -13,7 +13,7 @@ function generate() {
 
   /* eslint-disable init-declarations */
 
-  let field1, field2, field3;
+  let field1, field2, field3, table1;
 
   /* eslint-enable init-declarations */
 
@@ -53,6 +53,24 @@ function generate() {
               })
             ],
             deadline: null
+          })
+        ]
+      }),
+      table1 = category.createField('TableField', {
+        name: 'table1',
+        description: null,
+        isRequired: false,
+        validators: [],
+        columns: [
+          category.createField('TextField', {
+            name: 'column1',
+            description: null,
+            isRequired: true,
+            validators: [
+              category.createValidator('MaxlengthValidator', {
+                threshold: 10
+              })
+            ]
           })
         ]
       })
@@ -142,7 +160,7 @@ function generate() {
   return {
     category,
     form1, form2, form3,
-    field1, field2, field3,
+    field1, field2, field3, table1,
   };
 }
 
