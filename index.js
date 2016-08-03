@@ -14,6 +14,7 @@ const Entity = require('./entity');
 const FormValue = require('./form_value');
 const FieldValue = require('./field_value');
 const TableFieldValue = require('./table_field_value');
+const RowValue = require('./row_value');
 
 const Operators = require('./operators');
 
